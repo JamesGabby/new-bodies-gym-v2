@@ -1,61 +1,61 @@
-// next.config.ts
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
+// next.config.js
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   // Enable React strict mode for better development experience
   reactStrictMode: true,
 
-  // Optimize images
+  // Image optimization configuration
   images: {
     remotePatterns: [
       {
-        protocol: "https",
-        hostname: "*.supabase.co",
-        pathname: "/storage/v1/object/public/**",
+        protocol: 'https',
+        hostname: '*.supabase.co',
+        port: '',
+        pathname: '/storage/v1/object/public/**',
       },
     ],
-    formats: ["image/avif", "image/webp"],
+    formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
 
-  // Experimental features
+  // Enable experimental features
   experimental: {
-    // Enable partial prerendering (Next.js 15+)
-    ppr: true,
-    // Optimize package imports
-    optimizePackageImports: ["lucide-react", "@supabase/supabase-js", "framer-motion"],
+    // Enable server actions
+    serverActions: {
+      bodySizeLimit: '2mb',
+    },
   },
 
   // Headers for security
   async headers() {
     return [
       {
-        source: "/:path*",
+        source: '/:path*',
         headers: [
           {
-            key: "X-DNS-Prefetch-Control",
-            value: "on",
+            key: 'X-DNS-Prefetch-Control',
+            value: 'on',
           },
           {
-            key: "Strict-Transport-Security",
-            value: "max-age=63072000; includeSubDomains; preload",
+            key: 'Strict-Transport-Security',
+            value: 'max-age=63072000; includeSubDomains; preload',
           },
           {
-            key: "X-Content-Type-Options",
-            value: "nosniff",
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
           },
           {
-            key: "X-Frame-Options",
-            value: "DENY",
+            key: 'X-Frame-Options',
+            value: 'DENY',
           },
           {
-            key: "X-XSS-Protection",
-            value: "1; mode=block",
+            key: 'X-XSS-Protection',
+            value: '1; mode=block',
           },
           {
-            key: "Referrer-Policy",
-            value: "origin-when-cross-origin",
+            key: 'Referrer-Policy',
+            value: 'origin-when-cross-origin',
           },
         ],
       },
@@ -66,14 +66,24 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
-        source: "/home",
-        destination: "/",
+        source: '/classes',
+        destination: '/timetable',
+        permanent: true,
+      },
+      {
+        source: '/pricing',
+        destination: '/membership',
+        permanent: true,
+      },
+      {
+        source: '/join',
+        destination: '/signup',
         permanent: true,
       },
     ];
   },
 
-  // Logging
+  // Logging configuration
   logging: {
     fetches: {
       fullUrl: true,
@@ -81,4 +91,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+module.exports = nextConfig;

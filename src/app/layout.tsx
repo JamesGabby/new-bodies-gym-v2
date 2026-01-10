@@ -1,33 +1,43 @@
-// src/app/layout.tsx
-import type { Metadata, Viewport } from 'next'
-import { GeistSans } from 'geist/font/sans'
-import { GeistMono } from 'geist/font/mono'
+// src/app/layout.tsx (final version)
+import type { Metadata, Viewport } from 'next';
+import { Inter } from 'next/font/google';
+import './globals.css';
+import { ThemeProvider } from '@/components/theme-provider';
+import { Header } from '@/components/layout/header';
+import { Footer } from '@/components/layout/footer';
+import { Toaster } from '@/components/ui/sonner';
+import { ScrollToTop } from '@/components/ui/scroll-to-top';
+import { CookieConsent } from '@/components/cookie-consent';
+import { Analytics } from '@/components/analytics';
+import { LocalBusinessSchema } from '@/components/structured-data';
 
-import { cn } from '@/lib/utils'
-import { siteConfig } from '@/config/site'
-import { Providers } from '@/components/providers'
-
-import './globals.css'
+const inter = Inter({ 
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+});
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteConfig.url),
+  metadataBase: new URL('https://newbodiesgym.co.uk'),
   title: {
-    default: `${siteConfig.name} - ${siteConfig.motto}`,
-    template: `%s | ${siteConfig.name}`,
+    default: 'New Bodies Gym | Where Everyone is Welcome | Buxton',
+    template: '%s | New Bodies Gym',
   },
-  description: `${siteConfig.name} in Buxton - ${siteConfig.motto}. State-of-the-art gym facilities, group fitness classes, personal training, and more. Join our welcoming community today!`,
+  description: 'New Bodies Gym in Buxton - where everyone is welcome. Full gym facilities, group classes, personal training, and more. Join today!',
   keywords: [
     'gym',
     'fitness',
     'Buxton',
-    'New Bodies Gym',
+    'gym near me',
+    'fitness classes',
     'personal training',
-    'group classes',
-    'spin',
-    'pilates',
-    'boxing',
     'weight training',
     'cardio',
+    'spin classes',
+    'yoga',
+    'pilates',
+    'boxing',
+    'New Bodies Gym',
   ],
   authors: [{ name: 'New Bodies Gym' }],
   creator: 'New Bodies Gym',
@@ -40,25 +50,24 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_GB',
-    url: siteConfig.url,
-    title: siteConfig.name,
-    description: `${siteConfig.name} - ${siteConfig.motto}`,
-    siteName: siteConfig.name,
+    url: 'https://newbodiesgym.co.uk',
+    siteName: 'New Bodies Gym',
+    title: 'New Bodies Gym | Where Everyone is Welcome',
+    description: 'New Bodies Gym in Buxton - where everyone is welcome. Full gym facilities, group classes, personal training, and more.',
     images: [
       {
-        url: siteConfig.ogImage,
+        url: '/images/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: siteConfig.name,
+        alt: 'New Bodies Gym - Where Everyone is Welcome',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: siteConfig.name,
-    description: `${siteConfig.name} - ${siteConfig.motto}`,
-    images: [siteConfig.ogImage],
-    creator: '@newbodiesgym',
+    title: 'New Bodies Gym | Where Everyone is Welcome',
+    description: 'New Bodies Gym in Buxton - where everyone is welcome. Full gym facilities, group classes, and more.',
+    images: ['/images/og-image.jpg'],
   },
   robots: {
     index: true,
@@ -77,34 +86,51 @@ export const metadata: Metadata = {
     apple: '/apple-touch-icon.png',
   },
   manifest: '/site.webmanifest',
-}
+  alternates: {
+    canonical: 'https://newbodiesgym.co.uk',
+  },
+};
 
 export const viewport: Viewport = {
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#1a1a1a' },
+    { media: '(prefers-color-scheme: dark)', color: '#09090b' },
   ],
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
-}
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={cn(
-          'min-h-screen bg-background font-sans antialiased',
-          GeistSans.variable,
-          GeistMono.variable
-        )}
-      >
-        <Providers>{children}</Providers>
+    <html lang="en" suppressHydrationWarning className={inter.variable}>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <LocalBusinessSchema />
+      </head>
+      <body className={inter.className}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <div className="relative flex min-h-screen flex-col">
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </div>
+          <ScrollToTop />
+          <CookieConsent />
+          <Toaster position="top-right" richColors />
+        </ThemeProvider>
+        <Analytics />
       </body>
     </html>
-  )
+  );
 }
