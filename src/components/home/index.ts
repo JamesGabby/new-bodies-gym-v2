@@ -1,0 +1,11 @@
+// src/components/home/index.ts
+export { HeroSection } from './hero-section'
+export { StatsSection } from './stats-section'
+export { FeaturesSection } from './features-section'
+export { TimetablePreview } from './timetable-preview'
+export { FacilitiesPreview } from './facilities-preview'
+export { GymRulesSection } from './gym-rules-section'
+export { TestimonialsSection } from './testimonials-section'
+export { AppDownloadSection } from './app-download-section'
+export { CTASection } from './cta-section'
+export { AnnouncementBanner } from './announcement-banner'
