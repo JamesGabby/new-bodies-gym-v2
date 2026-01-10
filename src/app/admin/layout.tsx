@@ -1,45 +1,42 @@
 // src/app/admin/layout.tsx
-import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
-import { AdminSidebar } from '@/components/admin/sidebar'
-import { AdminHeader } from '@/components/admin/header'
+import { redirect } from 'next/navigation';
+import { createClient } from '@/lib/supabase/server';
+import { AdminSidebar } from '@/components/admin/admin-sidebar';
+import { AdminHeader } from '@/components/admin/admin-header';
 
 export default async function AdminLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
-  const supabase = await createClient()
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
+  const supabase = await createClient();
+  
+  const { data: { user } } = await supabase.auth.getUser();
+  
   if (!user) {
-    redirect('/login?redirectTo=/admin')
+    redirect('/login?redirect=/admin');
   }
 
-  // Check if user has admin/staff role
+  // Check if user is admin
   const { data: profile } = await supabase
     .from('profiles')
     .select('role')
     .eq('id', user.id)
-    .single()
+    .single();
 
-  if (!profile || !['admin', 'super_admin', 'staff'].includes(profile.role)) {
-    redirect('/')
+  if (profile?.role !== 'admin' && profile?.role !== 'staff') {
+    redirect('/dashboard');
   }
 
   return (
-    <div className="relative min-h-screen bg-background">
-      {/* Sidebar */}
+    <div className="min-h-screen bg-background">
       <AdminSidebar />
-
-      {/* Main Content */}
       <div className="lg:pl-72">
-        <AdminHeader />
-        <main className="p-4 lg:p-8">{children}</main>
+        <AdminHeader user={user} />
+        <main className="py-6 px-4 sm:px-6 lg:px-8">
+          {children}
+        </main>
       </div>
     </div>
-  )
+  );
 }
