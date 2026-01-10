@@ -1,219 +1,252 @@
 /* src/app/globals.css */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-@layer base {
-  :root {
-    /* Brand Colors */
-    --brand-lime: 79 100% 59%;
-    --brand-charcoal: 0 0% 35%;
+/* Define custom theme */
+@theme {
+  /* Brand Colors */
+  --color-brand-lime-50: oklch(0.98 0.05 120);
+  --color-brand-lime-100: oklch(0.96 0.1 120);
+  --color-brand-lime-200: oklch(0.92 0.15 120);
+  --color-brand-lime-300: oklch(0.87 0.2 115);
+  --color-brand-lime-400: oklch(0.82 0.25 110);
+  --color-brand-lime-500: oklch(0.84 0.35 120);
+  /* Main lime - #ADFF2F equivalent */
+  --color-brand-lime-600: oklch(0.72 0.3 115);
+  --color-brand-lime-700: oklch(0.6 0.25 110);
+  --color-brand-lime-800: oklch(0.5 0.2 105);
+  --color-brand-lime-900: oklch(0.4 0.15 100);
 
-    /* Light Theme */
-    --background: 0 0% 100%;
-    --foreground: 0 0% 10%;
-    
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 10%;
-    
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 10%;
-    
-    --primary: 79 100% 59%;
-    --primary-foreground: 0 0% 10%;
-    
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 10%;
-    
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
-    
-    --accent: 79 100% 59%;
-    --accent-foreground: 0 0% 10%;
-    
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
-    
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 79 100% 59%;
-    
-    --radius: 0.75rem;
-    
-    /* Chart colors */
-    --chart-1: 79 100% 59%;
-    --chart-2: 79 100% 45%;
-    --chart-3: 0 0% 35%;
-    --chart-4: 0 0% 55%;
-    --chart-5: 79 100% 75%;
+  --color-brand-charcoal-50: oklch(0.95 0 0);
+  --color-brand-charcoal-100: oklch(0.9 0 0);
+  --color-brand-charcoal-200: oklch(0.8 0 0);
+  --color-brand-charcoal-300: oklch(0.7 0 0);
+  --color-brand-charcoal-400: oklch(0.55 0 0);
+  /* Main charcoal - #595959 equivalent */
+  --color-brand-charcoal-500: oklch(0.45 0 0);
+  --color-brand-charcoal-600: oklch(0.35 0 0);
+  --color-brand-charcoal-700: oklch(0.28 0 0);
+  --color-brand-charcoal-800: oklch(0.2 0 0);
+  --color-brand-charcoal-900: oklch(0.13 0 0);
+
+  /* Border Radius */
+  --radius-lg: 0.75rem;
+  --radius-md: 0.5rem;
+  --radius-sm: 0.25rem;
+
+  /* Shadows */
+  --shadow-glow: 0 0 20px oklch(0.84 0.35 120 / 0.3);
+  --shadow-glow-lg: 0 0 40px oklch(0.84 0.35 120 / 0.4);
+
+  /* Animation */
+  --animate-fade-in: fade-in 0.5s ease-out;
+  --animate-fade-up: fade-up 0.5s ease-out;
+  --animate-scale-in: scale-in 0.3s ease-out;
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
   }
 
-  .dark {
-    --background: 0 0% 10%;
-    --foreground: 0 0% 98%;
-    
-    --card: 0 0% 13%;
-    --card-foreground: 0 0% 98%;
-    
-    --popover: 0 0% 13%;
-    --popover-foreground: 0 0% 98%;
-    
-    --primary: 79 100% 59%;
-    --primary-foreground: 0 0% 10%;
-    
-    --secondary: 0 0% 18%;
-    --secondary-foreground: 0 0% 98%;
-    
-    --muted: 0 0% 18%;
-    --muted-foreground: 0 0% 65%;
-    
-    --accent: 79 100% 59%;
-    --accent-foreground: 0 0% 10%;
-    
-    --destructive: 0 62% 50%;
-    --destructive-foreground: 0 0% 98%;
-    
-    --border: 0 0% 20%;
-    --input: 0 0% 20%;
-    --ring: 79 100% 59%;
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
-  
-  body {
-    @apply bg-background text-foreground antialiased;
-    font-feature-settings: "rlig" 1, "calt" 1;
-  }
+/* CSS Variables for Shadcn UI components */
+:root {
+  --background: 0 0% 100%;
+  --foreground: 0 0% 10%;
 
-  /* Smooth scrolling */
-  html {
-    scroll-behavior: smooth;
-  }
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 10%;
 
-  /* Selection color */
-  ::selection {
-    @apply bg-brand-lime-500/30 text-foreground;
-  }
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 10%;
 
-  /* Focus visible styles */
-  :focus-visible {
-    @apply outline-none ring-2 ring-brand-lime-500 ring-offset-2 ring-offset-background;
-  }
+  --primary: 79 100% 59%;
+  --primary-foreground: 0 0% 10%;
 
-  /* Scrollbar styling */
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
+  --secondary: 0 0% 96%;
+  --secondary-foreground: 0 0% 10%;
 
-  ::-webkit-scrollbar-track {
-    @apply bg-muted;
-  }
+  --muted: 0 0% 96%;
+  --muted-foreground: 0 0% 45%;
 
-  ::-webkit-scrollbar-thumb {
-    @apply bg-brand-charcoal-400 rounded-full;
-  }
+  --accent: 79 100% 59%;
+  --accent-foreground: 0 0% 10%;
 
-  ::-webkit-scrollbar-thumb:hover {
-    @apply bg-brand-charcoal-500;
-  }
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+
+  --border: 0 0% 90%;
+  --input: 0 0% 90%;
+  --ring: 79 100% 59%;
+
+  --radius: 0.75rem;
+
+  --chart-1: 79 100% 59%;
+  --chart-2: 79 100% 45%;
+  --chart-3: 0 0% 35%;
+  --chart-4: 0 0% 55%;
+  --chart-5: 79 100% 75%;
 }
 
-@layer utilities {
-  /* Text gradient utility */
-  .text-gradient {
-    @apply bg-brand-gradient bg-clip-text text-transparent;
-  }
+.dark {
+  --background: 0 0% 7%;
+  --foreground: 0 0% 98%;
 
-  /* Glass morphism effect */
-  .glass {
-    @apply bg-white/10 backdrop-blur-lg border border-white/20;
-  }
+  --card: 0 0% 10%;
+  --card-foreground: 0 0% 98%;
 
-  .glass-dark {
-    @apply bg-black/20 backdrop-blur-lg border border-white/10;
-  }
+  --popover: 0 0% 10%;
+  --popover-foreground: 0 0% 98%;
 
-  /* Glow effects */
-  .glow {
-    @apply shadow-glow;
-  }
+  --primary: 79 100% 59%;
+  --primary-foreground: 0 0% 10%;
 
-  .glow-lg {
-    @apply shadow-glow-lg;
-  }
+  --secondary: 0 0% 15%;
+  --secondary-foreground: 0 0% 98%;
 
-  /* Animation delays */
-  .animation-delay-100 {
-    animation-delay: 100ms;
-  }
-  .animation-delay-200 {
-    animation-delay: 200ms;
-  }
-  .animation-delay-300 {
-    animation-delay: 300ms;
-  }
-  .animation-delay-400 {
-    animation-delay: 400ms;
-  }
-  .animation-delay-500 {
-    animation-delay: 500ms;
-  }
+  --muted: 0 0% 15%;
+  --muted-foreground: 0 0% 65%;
 
-  /* Container query support */
-  .container-query {
-    container-type: inline-size;
-  }
+  --accent: 79 100% 59%;
+  --accent-foreground: 0 0% 10%;
 
-  /* No scrollbar utility */
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  .no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
+  --destructive: 0 62% 50%;
+  --destructive-foreground: 0 0% 98%;
+
+  --border: 0 0% 18%;
+  --input: 0 0% 18%;
+  --ring: 79 100% 59%;
 }
 
-@layer components {
-  /* Brand button styles */
-  .btn-brand {
-    @apply inline-flex items-center justify-center rounded-lg bg-brand-lime-500 px-6 py-3 text-sm font-semibold text-brand-charcoal-900 transition-all duration-200 hover:bg-brand-lime-400 hover:shadow-glow focus:outline-none focus:ring-2 focus:ring-brand-lime-500 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
-  }
+/* Base styles */
+* {
+  border-color: hsl(var(--border));
+}
 
-  .btn-brand-outline {
-    @apply inline-flex items-center justify-center rounded-lg border-2 border-brand-lime-500 bg-transparent px-6 py-3 text-sm font-semibold text-brand-lime-500 transition-all duration-200 hover:bg-brand-lime-500 hover:text-brand-charcoal-900 focus:outline-none focus:ring-2 focus:ring-brand-lime-500 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
-  }
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
-  /* Card styles */
-  .card-brand {
-    @apply rounded-xl border border-border bg-card p-6 shadow-card transition-all duration-200 hover:shadow-card-hover;
-  }
+html {
+  scroll-behavior: smooth;
+}
 
-  /* Section padding */
-  .section-padding {
-    @apply py-16 md:py-24 lg:py-32;
-  }
+/* Selection color */
+::selection {
+  background-color: oklch(0.84 0.35 120 / 0.3);
+}
 
-  /* Heading styles */
-  .heading-1 {
-    @apply text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl;
-  }
+/* Focus styles */
+:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring));
+}
 
-  .heading-2 {
-    @apply text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl;
-  }
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
 
-  .heading-3 {
-    @apply text-2xl font-bold tracking-tight sm:text-3xl;
-  }
+::-webkit-scrollbar-track {
+  background-color: hsl(var(--muted));
+}
 
-  /* Badge styles */
-  .badge-brand {
-    @apply inline-flex items-center rounded-full bg-brand-lime-500/10 px-3 py-1 text-xs font-medium text-brand-lime-500 ring-1 ring-inset ring-brand-lime-500/20;
-  }
+::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* Utility classes */
+.text-gradient {
+  background: linear-gradient(135deg, oklch(0.84 0.35 120), oklch(0.72 0.3 115));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.glass {
+  background-color: rgb(255 255 255 / 0.1);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgb(255 255 255 / 0.2);
+}
+
+.glass-dark {
+  background-color: rgb(0 0 0 / 0.2);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgb(255 255 255 / 0.1);
+}
+
+.glow {
+  box-shadow: var(--shadow-glow);
+}
+
+.glow-lg {
+  box-shadow: var(--shadow-glow-lg);
+}
+
+/* Animation delays */
+.animation-delay-100 {
+  animation-delay: 100ms;
+}
+
+.animation-delay-200 {
+  animation-delay: 200ms;
+}
+
+.animation-delay-300 {
+  animation-delay: 300ms;
+}
+
+.animation-delay-400 {
+  animation-delay: 400ms;
+}
+
+.animation-delay-500 {
+  animation-delay: 500ms;
+}
+
+/* No scrollbar utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
