@@ -1,4 +1,6 @@
 // src/components/layout/footer.tsx
+'use client';
+
 import Link from 'next/link'
 import {
   Phone,

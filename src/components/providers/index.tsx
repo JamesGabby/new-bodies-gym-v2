@@ -1,29 +1,26 @@
 // src/components/providers/index.tsx
-'use client'
+'use client';
 
-import { ThemeProvider } from './theme-provider'
-import { QueryProvider } from './query-provider'
-import { AuthProvider } from './auth-provider'
-import { Toaster } from '@/components/ui/sonner'
+import { ThemeProvider } from 'next-themes';
+import { QueryProvider } from './query-provider';
+import { Toaster } from '@/components/ui/sonner';
 
 interface ProvidersProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
 export function Providers({ children }: ProvidersProps) {
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="dark"
-      enableSystem
-      disableTransitionOnChange
-    >
-      <QueryProvider>
-        <AuthProvider>
-          {children}
-          <Toaster position="top-right" richColors closeButton />
-        </AuthProvider>
-      </QueryProvider>
-    </ThemeProvider>
-  )
+    <QueryProvider>
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="dark"
+        enableSystem
+        disableTransitionOnChange
+      >
+        {children}
+        <Toaster position="top-right" richColors />
+      </ThemeProvider>
+    </QueryProvider>
+  );
 }
