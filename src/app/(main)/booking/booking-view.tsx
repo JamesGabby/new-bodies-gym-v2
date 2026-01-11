@@ -10,7 +10,6 @@ import { useClassInstances, useClassTypes, useCreateBooking } from '@/hooks/use-
 import { useAuthStore } from '@/stores/auth-store'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
-import { Badge } from '@/components/ui/badge'
 import {
   Popover,
   PopoverContent,
@@ -34,13 +33,18 @@ export function BookingView() {
   const [selectedClass, setSelectedClass] = useState<ClassInstanceWithDetails | null>(null)
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
 
-  const { hasActiveMembership } = useAuthStore()
+  const { hasActiveMembership, membership } = useAuthStore()
+
+console.log('=== MEMBERSHIP DEBUG ===')
+console.log('Membership:', membership)
+console.log('Has Active:', hasActiveMembership())
 
   // Calculate date range (2 weeks)
   const startDate = format(selectedDate, 'yyyy-MM-dd')
   const endDate = format(addDays(selectedDate, 0), 'yyyy-MM-dd')
 
   const { data: classInstances, isLoading } = useClassInstances(startDate, endDate)
+
   const { data: classTypes } = useClassTypes()
   const createBooking = useCreateBooking()
 
