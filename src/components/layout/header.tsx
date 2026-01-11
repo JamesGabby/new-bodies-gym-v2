@@ -157,7 +157,7 @@ export function Header() {
                         {getInitials(getFullName() || user?.email || 'U')}
                       </AvatarFallback>
                     </Avatar>
-                    <div className="hidden md:flex flex-col items-start">
+                    <span className="hidden md:flex flex-col items-start">
                       <span className="text-sm font-medium">
                         {profile?.first_name || 'User'}
                       </span>
@@ -169,7 +169,7 @@ export function Header() {
                           Member
                         </Badge>
                       )}
-                    </div>
+                    </span>
                     <ChevronDown className="h-4 w-4 text-muted-foreground hidden md:block" />
                   </Button>
                 </DropdownMenuTrigger>
