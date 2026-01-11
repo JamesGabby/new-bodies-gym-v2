@@ -30,15 +30,10 @@ export async function updateSession(request: NextRequest) {
     }
   )
 
-  // IMPORTANT: Do not run code between createServerClient and
-  // supabase.auth.getUser(). A simple mistake could make your
-  // application vulnerable to timing attacks.
-
   const {
     data: { user },
   } = await supabase.auth.getUser()
 
-  // Protected routes
   const protectedRoutes = ['/dashboard', '/booking', '/admin']
   const adminRoutes = ['/admin']
   const authRoutes = ['/login', '/signup']
@@ -53,7 +48,6 @@ export async function updateSession(request: NextRequest) {
     request.nextUrl.pathname.startsWith(route)
   )
 
-  // Redirect unauthenticated users from protected routes
   if (isProtectedRoute && !user) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
@@ -61,7 +55,6 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  // Redirect authenticated users from auth routes
   if (isAuthRoute && user) {
     const url = request.nextUrl.clone()
     const redirectTo = url.searchParams.get('redirectTo') || '/'
@@ -72,13 +65,26 @@ export async function updateSession(request: NextRequest) {
 
   // Check admin access
   if (isAdminRoute && user) {
-    const { data: profile } = await supabase
+    console.log('=== MIDDLEWARE ADMIN CHECK ===')
+    console.log('User ID:', user.id)
+    console.log('User Email:', user.email)
+    
+    const { data: profile, error } = await supabase
       .from('profiles')
       .select('role')
       .eq('id', user.id)
       .single()
 
-    if (!profile || !['admin', 'super_admin', 'staff'].includes(profile.role)) {
+    console.log('Profile:', profile)
+    console.log('Profile Error:', error)
+    console.log('Role:', profile?.role)
+    
+    const allowedRoles = ['admin', 'super_admin', 'staff']
+    const hasAccess = profile && allowedRoles.includes(profile.role)
+    console.log('Has Access:', hasAccess)
+    console.log('=== END MIDDLEWARE DEBUG ===')
+
+    if (!hasAccess) {
       const url = request.nextUrl.clone()
       url.pathname = '/'
       return NextResponse.redirect(url)
