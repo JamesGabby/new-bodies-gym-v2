@@ -4,13 +4,13 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { Logo } from '@/components/ui/logo';
+import { Logo } from '../shared/logo';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Profile } from '@/types/database';
+import { Profile } from '@/types';
 import {
   LayoutDashboard,
   Calendar,
@@ -45,8 +45,8 @@ function SidebarContent({ profile, onNavigate }: { profile: Profile | null; onNa
   return (
     <div className="flex h-full flex-col">
       <div className="flex h-16 items-center border-b border-border px-6">
-        <Link href="/" className="flex items-center gap-2" onClick={onNavigate}>
-          <Logo className="h-8 w-auto" />
+        <Link href="/" className="flex items-center gap-2" onClick={onNavigate} >
+          <Logo className="h-8 w-auto" linkToHome={false} />
         </Link>
       </div>
       

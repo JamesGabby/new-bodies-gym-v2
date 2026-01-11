@@ -6,7 +6,6 @@ import { useClassInstances, useBookings } from '@/hooks/use-bookings';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Calendar } from '@/components/ui/calendar';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   Select,
@@ -35,7 +34,7 @@ import {
 } from 'lucide-react';
 import { format, addDays, startOfWeek, endOfWeek, isSameDay, isAfter, isBefore } from 'date-fns';
 import { cn } from '@/lib/utils';
-import { ClassInstance, ClassType } from '@/types/database';
+import { ClassInstance, ClassType } from '@/types';
 import { toast } from 'sonner';
 
 type ClassInstanceWithType = ClassInstance & { class_type?: ClassType };
@@ -51,7 +50,7 @@ export default function BookClassPage() {
   const weekStart = startOfWeek(selectedDate, { weekStartsOn: 1 });
   const weekEnd = endOfWeek(selectedDate, { weekStartsOn: 1 });
   
-  const { classes, loading, refetch } = useClassInstances(
+  const { data: classes = [], isLoading: loading, refetch } = useClassInstances(
     format(weekStart, 'yyyy-MM-dd'),
     format(weekEnd, 'yyyy-MM-dd')
   );

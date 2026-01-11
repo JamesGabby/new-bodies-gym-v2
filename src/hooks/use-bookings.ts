@@ -388,3 +388,29 @@ export function useInstructors() {
     staleTime: 1000 * 60 * 60, // 1 hour
   })
 }
+
+// Wrapper for class instances with friendlier return values
+export function useClassInstancesData(startDate: string, endDate: string) {
+  const query = useClassInstances(startDate, endDate)
+  
+  return {
+    classes: query.data ?? [],
+    loading: query.isLoading,
+    error: query.error,
+    refetch: query.refetch,
+  }
+}
+
+// Combined bookings hook
+export function useBookings() {
+  const createBookingMutation = useCreateBooking()
+
+  const createBooking = async (classInstanceId: string, notes?: string) => {
+    return createBookingMutation.mutateAsync({ classInstanceId, notes })
+  }
+
+  return {
+    createBooking,
+    isCreating: createBookingMutation.isPending,
+  }
+}
