@@ -88,9 +88,10 @@ export default function MembersPage() {
       },
     },
     {
-      accessorKey: 'phone',
-      header: 'Phone',
-      cell: ({ row }) => row.original.phone || '-',
+      accessorKey: 'email',  // This creates searchable 'email' column
+      header: 'Email',
+      cell: () => null,  // Don't render (already shown in name column)
+      enableHiding: false,
     },
     {
       accessorKey: 'role',

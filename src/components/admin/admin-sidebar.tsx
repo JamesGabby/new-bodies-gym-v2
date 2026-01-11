@@ -45,7 +45,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
     <div className="flex h-full flex-col">
       <div className="flex h-16 items-center border-b border-border px-6">
         <Link href="/admin" className="flex items-center gap-2" onClick={onNavigate}>
-          <Logo className="h-8 w-auto" />
+          <Logo className="h-8 w-auto" linkToHome={false} />
           <span className="font-bold text-lg">Admin</span>
         </Link>
       </div>
