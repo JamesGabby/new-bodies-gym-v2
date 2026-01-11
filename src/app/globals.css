@@ -146,6 +146,22 @@
   --ring: 79 100% 59%;
 }
 
+/* Force solid backgrounds for popovers/dropdowns */
+[data-slot="dropdown-menu-content"],
+[data-slot="popover-content"],
+[data-radix-popper-content-wrapper] > div {
+  background-color: hsl(var(--popover)) !important;
+}
+
+/* Fix transparent popovers/dropdowns/dialogs */
+[data-slot="dropdown-menu-content"],
+[data-slot="popover-content"],
+[data-slot="dialog-content"],
+[role="dialog"] {
+  background-color: hsl(var(--popover));
+  color: hsl(var(--popover-foreground));
+}
+
 /* Base styles */
 * {
   border-color: hsl(var(--border));

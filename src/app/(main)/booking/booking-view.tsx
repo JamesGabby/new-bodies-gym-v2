@@ -1,7 +1,7 @@
 // src/app/(main)/booking/booking-view.tsx
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { format, addDays, isSameDay, isBefore, startOfDay } from 'date-fns'
 import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Filter, Loader2 } from 'lucide-react'
 
@@ -32,12 +32,14 @@ export function BookingView() {
   const [selectedClassType, setSelectedClassType] = useState<string>('all')
   const [selectedClass, setSelectedClass] = useState<ClassInstanceWithDetails | null>(null)
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
-  const { hasActiveMembership, membership } = useAuthStore()
+  const { hasActiveMembership } = useAuthStore()
 
-console.log('=== MEMBERSHIP DEBUG ===')
-console.log('Membership:', membership)
-console.log('Has Active:', hasActiveMembership())
+  // Handle hydration
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   // Calculate date range (2 weeks)
   const startDate = format(selectedDate, 'yyyy-MM-dd')
@@ -99,6 +101,17 @@ console.log('Has Active:', hasActiveMembership())
   }
 
   const nextDay = () => setSelectedDate(addDays(selectedDate, 1))
+
+  // Don't render auth-dependent content until mounted
+  if (!mounted) {
+    return (
+      <div className="space-y-6">
+        {/* Show a loading skeleton or minimal UI */}
+        <div className="rounded-xl border bg-card p-4 animate-pulse h-32" />
+        <div className="rounded-xl border bg-card p-4 animate-pulse h-64" />
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">

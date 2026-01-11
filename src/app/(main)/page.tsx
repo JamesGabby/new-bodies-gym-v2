@@ -6,7 +6,6 @@ import { TimetablePreview } from '@/components/home/timetable-preview'
 import { FacilitiesPreview } from '@/components/home/facilities-preview'
 import { TestimonialsSection } from '@/components/home/testimonials-section'
 import { CTASection } from '@/components/home/cta-section'
-import { AnnouncementBanner } from '@/components/home/announcement-banner'
 import { StatsSection } from '@/components/home/stats-section'
 import { GymRulesSection } from '@/components/home/gym-rules-section'
 import { AppDownloadSection } from '@/components/home/app-download-section'
@@ -20,7 +19,6 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <>
-      <AnnouncementBanner />
       <HeroSection />
       <StatsSection />
       <FeaturesSection />
