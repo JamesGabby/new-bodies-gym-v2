@@ -16,8 +16,8 @@ export async function POST(request: Request) {
 
     // Use the database function to generate instances
     const { data, error } = await supabase.rpc('generate_class_instances', {
-      start_date: startDate || format(new Date(), 'yyyy-MM-dd'),
-      end_date: endDate || format(addDays(new Date(), 14), 'yyyy-MM-dd'),
+      p_start_date: startDate || format(new Date(), 'yyyy-MM-dd'),
+      p_end_date: endDate || format(addDays(new Date(), 14), 'yyyy-MM-dd'),
     })
 
     if (error) throw error
