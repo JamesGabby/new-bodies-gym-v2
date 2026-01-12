@@ -61,17 +61,16 @@ export function ContactForm() {
     try {
       const supabase = createClient()
 
-      const insertData: ContactInsert = {
-        name: data.name,
-        email: data.email,
-        phone: data.phone || null,
-        subject: data.subject || null,
-        message: data.message,
-      }
-
-      const { error } = await supabase
+      // Type assertion workaround
+      const { error } = await (supabase as any)
         .from('contact_submissions')
-        .insert(insertData)
+        .insert({
+          name: data.name,
+          email: data.email,
+          phone: data.phone || null,
+          subject: data.subject || null,
+          message: data.message,
+        })
 
       if (error) throw error
 
