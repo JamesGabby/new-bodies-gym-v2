@@ -61,7 +61,7 @@ export const signUpSchema = z
     termsAccepted: z
       .boolean()
       .refine((val) => val === true, 'You must accept the terms and conditions'),
-    marketingConsent: z.boolean().default(false),
+    marketingConsent: z.boolean(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: 'Passwords do not match',
