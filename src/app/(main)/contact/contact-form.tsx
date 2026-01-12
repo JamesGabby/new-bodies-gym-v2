@@ -1,4 +1,3 @@
-// src/app/(main)/contact/contact-form.tsx
 'use client'
 
 import { useState } from 'react'
@@ -9,6 +8,7 @@ import { toast } from 'sonner'
 
 import { contactFormSchema, ContactFormInput } from '@/lib/validations'
 import { createClient } from '@/lib/supabase/client'
+import { Database } from '@/types/database.types'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -28,6 +28,8 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Card, CardContent } from '@/components/ui/card'
+
+type ContactInsert = Database['public']['Tables']['contact_submissions']['Insert']
 
 const subjects = [
   { value: 'general', label: 'General Inquiry' },
@@ -59,13 +61,17 @@ export function ContactForm() {
     try {
       const supabase = createClient()
 
-      const { error } = await supabase.from('contact_submissions').insert({
+      const insertData: ContactInsert = {
         name: data.name,
         email: data.email,
         phone: data.phone || null,
         subject: data.subject || null,
         message: data.message,
-      })
+      }
+
+      const { error } = await supabase
+        .from('contact_submissions')
+        .insert(insertData)
 
       if (error) throw error
 
