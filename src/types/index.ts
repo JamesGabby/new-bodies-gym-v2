@@ -3,6 +3,7 @@ import { ClassType, ClassInstance, Instructor, Booking, Profile } from './databa
 
 // Extended types with relations
 export interface ClassInstanceWithDetails extends ClassInstance {
+  id: string
   class_type: ClassType
   instructor: Instructor | null
   bookings?: Booking[]
