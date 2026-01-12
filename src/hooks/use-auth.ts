@@ -12,7 +12,15 @@ import { SUCCESS_MESSAGES, ERROR_MESSAGES } from '@/lib/constants'
 export function useAuth() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
-  const { setUser, setProfile, setMembership, reset } = useAuthStore()
+  const { 
+    user,           // Add this
+    profile,        // Add this
+    membership,     // Add this
+    setUser, 
+    setProfile, 
+    setMembership, 
+    reset 
+  } = useAuthStore()
 
   const signUp = async (data: SignUpInput) => {
     setIsLoading(true)
@@ -38,7 +46,6 @@ export function useAuth() {
       }
 
       if (authData.user) {
-        // Update profile with additional data
         const { error: profileError } = await supabase
           .from('profiles')
           .update({
@@ -90,7 +97,6 @@ export function useAuth() {
           email: authData.user.email!,
         })
 
-        // Fetch profile
         const { data: profile } = await supabase
           .from('profiles')
           .select('*')
@@ -101,7 +107,6 @@ export function useAuth() {
           setProfile(profile)
         }
 
-        // Fetch membership
         const { data: membership } = await supabase
           .from('memberships')
           .select('*')
@@ -264,8 +269,21 @@ export function useAuth() {
     }
   }
 
+  // Computed properties
+  const isAuthenticated = !!user
+  const isAdmin = profile?.role === 'admin'
+  const isStaff = profile?.role === 'staff' || profile?.role === 'admin'
+
   return {
+    // State
+    user,
+    profile,
+    membership,
     isLoading,
+    isAuthenticated,
+    isAdmin,
+    isStaff,
+    // Actions
     signUp,
     signIn,
     signOut,
