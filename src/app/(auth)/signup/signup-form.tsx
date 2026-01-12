@@ -8,7 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Eye, EyeOff, Loader2, Mail, User, Phone, Calendar, Check } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
-import { signUpSchema, SignUpInput } from '@/lib/validations'
+import { signUpSchema, SignUpInput, SignUpFormInput } from '@/lib/validations'
 import { useAuth } from '@/hooks/use-auth'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -39,7 +39,7 @@ export function SignupForm() {
   const [step, setStep] = useState(1)
   const { signUp, signInWithGoogle, isLoading } = useAuth()
 
-  const form = useForm<SignUpInput>({
+  const form = useForm<SignUpFormInput>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
       email: '',

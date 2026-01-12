@@ -308,7 +308,6 @@ export const membershipSchema = z.object({
 
 // Type exports
 export type LoginInput = z.infer<typeof loginSchema>
-export type SignUpInput = z.infer<typeof signUpSchema>
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>
 export type ProfileUpdateInput = z.infer<typeof profileUpdateSchema>
@@ -320,3 +319,5 @@ export type ScheduleInput = z.infer<typeof scheduleSchema>
 export type InstructorInput = z.infer<typeof instructorSchema>
 export type AnnouncementInput = z.infer<typeof announcementSchema>
 export type MembershipInput = z.infer<typeof membershipSchema>
+export type SignUpInput = z.infer<typeof signUpSchema>      // Output type (for after validation)
+export type SignUpFormInput = z.input<typeof signUpSchema>  // Input type (for form)
