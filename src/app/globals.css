@@ -10,7 +10,6 @@
   --color-brand-lime-300: oklch(0.87 0.2 115);
   --color-brand-lime-400: oklch(0.82 0.25 110);
   --color-brand-lime-500: oklch(0.84 0.35 120);
-  /* Main lime - #ADFF2F equivalent */
   --color-brand-lime-600: oklch(0.72 0.3 115);
   --color-brand-lime-700: oklch(0.6 0.25 110);
   --color-brand-lime-800: oklch(0.5 0.2 105);
@@ -21,7 +20,6 @@
   --color-brand-charcoal-200: oklch(0.8 0 0);
   --color-brand-charcoal-300: oklch(0.7 0 0);
   --color-brand-charcoal-400: oklch(0.55 0 0);
-  /* Main charcoal - #595959 equivalent */
   --color-brand-charcoal-500: oklch(0.45 0 0);
   --color-brand-charcoal-600: oklch(0.35 0 0);
   --color-brand-charcoal-700: oklch(0.28 0 0);
@@ -37,7 +35,7 @@
   --shadow-glow: 0 0 20px oklch(0.84 0.35 120 / 0.3);
   --shadow-glow-lg: 0 0 40px oklch(0.84 0.35 120 / 0.4);
 
-  /* Animation */
+  /* Animation definitions */
   --animate-fade-in: fade-in 0.5s ease-out;
   --animate-fade-up: fade-up 0.5s ease-out;
   --animate-scale-in: scale-in 0.3s ease-out;
@@ -47,12 +45,8 @@
   --animate-pulse-glow: pulse-glow 2s ease-in-out infinite;
 
   @keyframes fade-in {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
 
   @keyframes fade-up {
@@ -89,30 +83,18 @@
   }
 
   @keyframes shimmer {
-    0% {
-      background-position: -200% 0;
-    }
-    100% {
-      background-position: 200% 0;
-    }
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
   }
 
   @keyframes float {
-    0%, 100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-10px);
-    }
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
   }
 
   @keyframes pulse-glow {
-    0%, 100% {
-      box-shadow: 0 0 20px oklch(0.84 0.35 120 / 0.3);
-    }
-    50% {
-      box-shadow: 0 0 40px oklch(0.84 0.35 120 / 0.5);
-    }
+    0%, 100% { box-shadow: 0 0 20px oklch(0.84 0.35 120 / 0.3); }
+    50% { box-shadow: 0 0 40px oklch(0.84 0.35 120 / 0.5); }
   }
 
   @keyframes slide-up {
@@ -142,34 +124,24 @@
 :root {
   --background: 0 0% 100%;
   --foreground: 0 0% 10%;
-
   --card: 0 0% 100%;
   --card-foreground: 0 0% 10%;
-
   --popover: 0 0% 100%;
   --popover-foreground: 0 0% 10%;
-
   --primary: 79 100% 59%;
   --primary-foreground: 0 0% 10%;
-
   --secondary: 0 0% 96%;
   --secondary-foreground: 0 0% 10%;
-
   --muted: 0 0% 96%;
   --muted-foreground: 0 0% 45%;
-
   --accent: 79 100% 59%;
   --accent-foreground: 0 0% 10%;
-
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
-
   --border: 0 0% 90%;
   --input: 0 0% 90%;
   --ring: 79 100% 59%;
-
   --radius: 0.75rem;
-
   --chart-1: 79 100% 59%;
   --chart-2: 79 100% 45%;
   --chart-3: 0 0% 35%;
@@ -180,34 +152,26 @@
 .dark {
   --background: 0 0% 7%;
   --foreground: 0 0% 98%;
-
   --card: 0 0% 10%;
   --card-foreground: 0 0% 98%;
-
   --popover: 0 0% 10%;
   --popover-foreground: 0 0% 98%;
-
   --primary: 79 100% 59%;
   --primary-foreground: 0 0% 10%;
-
   --secondary: 0 0% 15%;
   --secondary-foreground: 0 0% 98%;
-
   --muted: 0 0% 15%;
   --muted-foreground: 0 0% 65%;
-
   --accent: 79 100% 59%;
   --accent-foreground: 0 0% 10%;
-
   --destructive: 0 62% 50%;
   --destructive-foreground: 0 0% 98%;
-
   --border: 0 0% 18%;
   --input: 0 0% 18%;
   --ring: 79 100% 59%;
 }
 
-/* Fix transparent backgrounds for popovers/dropdowns/dialogs */
+/* Fix transparent backgrounds for UI components */
 [data-slot="dropdown-menu-content"],
 [data-slot="popover-content"],
 [data-slot="dialog-content"],
@@ -297,6 +261,39 @@ html {
   box-shadow: var(--shadow-glow-lg);
 }
 
+/* Performance-friendly CSS animations */
+@keyframes pulse-slow {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.15;
+  }
+}
+
+@keyframes pulse-slower {
+  0%, 100% {
+    transform: scale(1.1);
+    opacity: 0.05;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 0.1;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 8s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.animate-pulse-slower {
+  animation: pulse-slower 10s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
 /* Animation utilities */
 .animate-gradient {
   animation: gradient 8s ease infinite;
@@ -323,33 +320,13 @@ html {
 }
 
 /* Animation delays */
-.animation-delay-100 {
-  animation-delay: 100ms;
-}
-
-.animation-delay-200 {
-  animation-delay: 200ms;
-}
-
-.animation-delay-300 {
-  animation-delay: 300ms;
-}
-
-.animation-delay-400 {
-  animation-delay: 400ms;
-}
-
-.animation-delay-500 {
-  animation-delay: 500ms;
-}
-
-.animation-delay-700 {
-  animation-delay: 700ms;
-}
-
-.animation-delay-1000 {
-  animation-delay: 1000ms;
-}
+.animation-delay-100 { animation-delay: 100ms; }
+.animation-delay-200 { animation-delay: 200ms; }
+.animation-delay-300 { animation-delay: 300ms; }
+.animation-delay-400 { animation-delay: 400ms; }
+.animation-delay-500 { animation-delay: 500ms; }
+.animation-delay-700 { animation-delay: 700ms; }
+.animation-delay-1000 { animation-delay: 1000ms; }
 
 /* Stagger children animations */
 .stagger-children > * {
@@ -447,35 +424,23 @@ p {
   text-wrap: pretty;
 }
 
-/* Performance-friendly CSS animations */
-@keyframes pulse-slow {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 0.1;
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
-  50% {
-    transform: scale(1.1);
-    opacity: 0.15;
+  
+  .animate-pulse-slow,
+  .animate-pulse-slower,
+  .animate-gradient,
+  .animate-shimmer,
+  .animate-float,
+  .animate-pulse-glow {
+    animation: none;
   }
-}
-
-@keyframes pulse-slower {
-  0%, 100% {
-    transform: scale(1.1);
-    opacity: 0.05;
-  }
-  50% {
-    transform: scale(1);
-    opacity: 0.1;
-  }
-}
-
-.animate-pulse-slow {
-  animation: pulse-slow 8s ease-in-out infinite;
-  will-change: transform, opacity;
-}
-
-.animate-pulse-slower {
-  animation: pulse-slower 10s ease-in-out infinite;
-  will-change: transform, opacity;
 }
