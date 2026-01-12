@@ -20,7 +20,7 @@ import {
 import { useTheme } from 'next-themes'
 
 import { cn } from '@/lib/utils'
-import { Logo } from '@/components/shared/logo'
+import { LogoWithImage } from '@/components/shared/logo'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -94,7 +94,7 @@ export function Header() {
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between lg:h-20">
           {/* Logo */}
-          <Logo size="md" />
+          <LogoWithImage size='lg' />
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-1">
