@@ -3,237 +3,337 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
-import { motion } from 'framer-motion'
-import { ArrowRight, Play, Calendar, Users, Clock } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { ArrowRight, Calendar, Users, Clock, Dumbbell, Star, ChevronRight, Sparkles } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { siteConfig } from '@/config/site'
 
-export function HeroSection() {
-  const [currentSlide, setCurrentSlide] = useState(0)
+const stats = [
+  { value: '500+', label: 'Active Members', icon: Users },
+  { value: '25+', label: 'Weekly Classes', icon: Calendar },
+  { value: '18+', label: 'Facilities', icon: Dumbbell },
+  { value: '4.8', label: 'Google Rating', icon: Star },
+]
 
-  const slides = [
-    {
-      title: 'Transform Your Body',
-      subtitle: 'Start Your Fitness Journey Today',
-      image: '/images/hero/gym-main.jpg',
-    },
-    {
-      title: 'Group Classes',
-      subtitle: 'Find Your Perfect Workout',
-      image: '/images/hero/classes.jpg',
-    },
-    {
-      title: 'Expert Training',
-      subtitle: 'Personal Training Available',
-      image: '/images/hero/training.jpg',
-    },
-  ]
+const todaysClasses = [
+  { name: 'Pilates', time: '9:30am', instructor: 'Sarah', spots: 5, color: 'bg-emerald-500' },
+  { name: 'Spin', time: '10:30am', instructor: 'Mike', spots: 3, color: 'bg-rose-500' },
+  { name: 'Bodytone', time: '6:00pm', instructor: 'Emma', spots: 12, color: 'bg-blue-500' },
+]
+
+export function HeroSection() {
+  const [mounted, setMounted] = useState(false)
+  const [activeClass, setActiveClass] = useState(0)
 
   useEffect(() => {
+    setMounted(true)
     const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length)
-    }, 5000)
+      setActiveClass((prev) => (prev + 1) % todaysClasses.length)
+    }, 3000)
     return () => clearInterval(timer)
-  }, [slides.length])
+  }, [])
 
   return (
     <section className="relative min-h-[calc(100vh-4rem)] lg:min-h-[calc(100vh-5rem)] flex items-center overflow-hidden">
-      {/* Background Pattern */}
+      {/* Animated Background */}
       <div className="absolute inset-0 -z-10 bg-brand-charcoal-900">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px]" />
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 h-[500px] w-[500px] rounded-full bg-brand-lime-500/10 blur-[120px]" />
-      </div>
-
-      {/* Background Image Slideshow */}
-      <div className="absolute inset-0 -z-10">
-        {slides.map((slide, index) => (
-          <div
-            key={index}
-            className={cn(
-              'absolute inset-0 transition-opacity duration-1000',
-              currentSlide === index ? 'opacity-20' : 'opacity-0'
-            )}
-          >
-            <div className="absolute inset-0 bg-gradient-to-r from-brand-charcoal-900 via-brand-charcoal-900/80 to-transparent" />
-          </div>
-        ))}
+        {/* Grid Pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f12_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f12_1px,transparent_1px)] bg-[size:24px_24px]" />
+        
+        {/* Gradient Orbs */}
+        <motion.div
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.1, 0.15, 0.1],
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute left-1/4 top-1/4 h-[600px] w-[600px] rounded-full bg-brand-lime-500/20 blur-[150px]"
+        />
+        <motion.div
+          animate={{
+            scale: [1.2, 1, 1.2],
+            opacity: [0.05, 0.1, 0.05],
+          }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute right-1/4 bottom-1/4 h-[400px] w-[400px] rounded-full bg-brand-lime-400/10 blur-[120px]"
+        />
+        
+        {/* Subtle Noise Texture */}
+        <div className="absolute inset-0 opacity-[0.015] bg-[url('/images/noise.png')]" />
       </div>
 
       <div className="container mx-auto px-4 py-12 lg:py-20">
-        <div className="grid gap-12 lg:grid-cols-2 lg:gap-8 items-center">
+        <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 items-center">
           {/* Content */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
             className="text-center lg:text-left"
           >
-            {/* Badge */}
+            {/* Animated Badge */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
             >
-              <Badge className="mb-6 bg-brand-lime-500/10 text-brand-lime-500 border-brand-lime-500/20 px-4 py-1.5">
-                <span className="mr-2">🏋️</span>
+              <Badge className="mb-6 bg-brand-lime-500/10 text-brand-lime-500 border-brand-lime-500/20 px-4 py-2 text-sm font-medium backdrop-blur-sm">
+                <Sparkles className="mr-2 h-4 w-4" />
                 {siteConfig.motto}
               </Badge>
             </motion.div>
 
-            {/* Heading */}
-            <h1 className="heading-1 mb-6">
-              <span className="text-foreground">Your Journey to a</span>
+            {/* Heading with Better Typography */}
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.6 }}
+              className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight mb-6 leading-[1.1]"
+            >
+              <span className="text-white">Your Journey to a</span>
               <br />
-              <span className="text-gradient bg-gradient-to-r from-brand-lime-400 to-brand-lime-600">
-                Stronger You
+              <span className="relative">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-lime-400 via-brand-lime-500 to-brand-lime-400 animate-gradient">
+                  Stronger You
+                </span>
+                <motion.span
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  transition={{ delay: 0.8, duration: 0.6 }}
+                  className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-brand-lime-500/0 via-brand-lime-500 to-brand-lime-500/0 origin-left"
+                />
               </span>
               <br />
-              <span className="text-foreground">Starts Here</span>
-            </h1>
+              <span className="text-white">Starts Here</span>
+            </motion.h1>
 
             {/* Description */}
-            <p className="text-lg text-muted-foreground mb-8 max-w-xl mx-auto lg:mx-0">
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.6 }}
+              className="text-lg lg:text-xl text-muted-foreground mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed"
+            >
               Join Buxton's most welcoming gym with state-of-the-art facilities,
-              expert trainers, and group classes for all fitness levels. Your
-              first step to transformation.
-            </p>
+              expert trainers, and group classes for{' '}
+              <span className="text-brand-lime-500 font-medium">all fitness levels</span>.
+            </motion.p>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.6 }}
+              className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-10"
+            >
               <Button
                 size="lg"
-                className="bg-brand-lime-500 text-brand-charcoal-900 hover:bg-brand-lime-400 shadow-glow text-base h-12 px-8"
+                className="group bg-brand-lime-500 text-brand-charcoal-900 hover:bg-brand-lime-400 shadow-lg shadow-brand-lime-500/25 hover:shadow-brand-lime-500/40 transition-all duration-300 text-base h-14 px-8 font-semibold"
                 asChild
               >
                 <Link href="/signup">
                   Start Your Journey
-                  <ArrowRight className="ml-2 h-5 w-5" />
+                  <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                 </Link>
               </Button>
               <Button
                 size="lg"
                 variant="outline"
-                className="border-brand-lime-500/50 text-foreground hover:bg-brand-lime-500/10 h-12 px-8"
+                className="group border-brand-charcoal-600 bg-brand-charcoal-800/50 text-white hover:bg-brand-charcoal-800 hover:border-brand-lime-500/50 h-14 px-8 backdrop-blur-sm transition-all duration-300"
                 asChild
               >
                 <Link href="/timetable">
-                  <Calendar className="mr-2 h-5 w-5" />
+                  <Calendar className="mr-2 h-5 w-5 text-brand-lime-500" />
                   View Timetable
+                  <ChevronRight className="ml-1 h-4 w-4 opacity-50 transition-transform group-hover:translate-x-1" />
                 </Link>
               </Button>
-            </div>
+            </motion.div>
 
-            {/* Quick Info */}
-            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-6 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <Clock className="h-4 w-4 text-brand-lime-500" />
-                <span>Open 6am - 9:30pm</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Users className="h-4 w-4 text-brand-lime-500" />
-                <span>All Abilities Welcome</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Calendar className="h-4 w-4 text-brand-lime-500" />
-                <span>Classes Included</span>
-              </div>
-            </div>
+            {/* Stats Row */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.6 }}
+              className="grid grid-cols-2 sm:grid-cols-4 gap-4 lg:gap-6"
+            >
+              {stats.map((stat, index) => (
+                <motion.div
+                  key={stat.label}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.7 + index * 0.1 }}
+                  className="group relative p-4 rounded-xl bg-brand-charcoal-800/30 border border-brand-charcoal-700/50 hover:border-brand-lime-500/30 transition-all duration-300 backdrop-blur-sm"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-brand-lime-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-xl" />
+                  <stat.icon className="h-5 w-5 text-brand-lime-500 mb-2" />
+                  <p className="text-2xl lg:text-3xl font-bold text-white">{stat.value}</p>
+                  <p className="text-xs lg:text-sm text-muted-foreground">{stat.label}</p>
+                </motion.div>
+              ))}
+            </motion.div>
           </motion.div>
 
-          {/* Hero Visual */}
+          {/* Hero Visual - Interactive Class Card */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7, delay: 0.3 }}
             className="relative hidden lg:block"
           >
             {/* Main Card */}
-            <div className="relative rounded-2xl bg-gradient-to-br from-brand-charcoal-800 to-brand-charcoal-900 p-1 shadow-2xl">
-              <div className="rounded-xl bg-brand-charcoal-900 p-6">
-                {/* Gym Stats Preview */}
-                <div className="grid grid-cols-2 gap-4 mb-6">
-                  <div className="rounded-lg bg-brand-charcoal-800/50 p-4 text-center">
-                    <p className="text-3xl font-bold text-brand-lime-500">18+</p>
-                    <p className="text-sm text-muted-foreground">Facilities</p>
+            <div className="relative">
+              {/* Glow Effect */}
+              <div className="absolute -inset-1 bg-gradient-to-r from-brand-lime-500/20 via-brand-lime-400/10 to-brand-lime-500/20 rounded-3xl blur-xl opacity-50" />
+              
+              <div className="relative rounded-2xl bg-gradient-to-br from-brand-charcoal-800 to-brand-charcoal-900 p-1 shadow-2xl">
+                <div className="rounded-xl bg-brand-charcoal-900/90 backdrop-blur-xl p-6">
+                  {/* Card Header */}
+                  <div className="flex items-center justify-between mb-6">
+                    <div>
+                      <h3 className="font-semibold text-white text-lg">Today's Classes</h3>
+                      <p className="text-sm text-muted-foreground">Book your spot now</p>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                      <span className="text-xs text-emerald-500 font-medium">Live</span>
+                    </div>
                   </div>
-                  <div className="rounded-lg bg-brand-charcoal-800/50 p-4 text-center">
-                    <p className="text-3xl font-bold text-brand-lime-500">25+</p>
-                    <p className="text-sm text-muted-foreground">Weekly Classes</p>
+
+                  {/* Classes List */}
+                  <div className="space-y-3 mb-6">
+                    {todaysClasses.map((cls, index) => (
+                      <motion.div
+  initial={false}
+  key={cls.name}
+  animate={{
+    scale: activeClass === index ? 1.02 : 1,
+  }}
+  className={cn(
+    "relative flex items-center justify-between rounded-xl bg-brand-charcoal-800/50 p-4 border-2 transition-all duration-300 cursor-pointer hover:bg-brand-charcoal-800/80",
+    activeClass === index 
+      ? "border-brand-lime-500/30 bg-brand-charcoal-800/80" 
+      : "border-transparent"
+  )}
+>
+                        {/* Active Indicator */}
+                        {activeClass === index && (
+                          <motion.div
+                            layoutId="activeIndicator"
+                            className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-brand-lime-500 rounded-r-full"
+                          />
+                        )}
+                        
+                        <div className="flex items-center gap-4">
+                          <div className={cn('h-12 w-12 rounded-xl flex items-center justify-center', cls.color + '/20')}>
+                            <div className={cn('h-3 w-3 rounded-full', cls.color)} />
+                          </div>
+                          <div>
+                            <p className="font-semibold text-white">{cls.name}</p>
+                            <p className="text-sm text-muted-foreground">
+                              {cls.time} · {cls.instructor}
+                            </p>
+                          </div>
+                        </div>
+                        
+                        <div className="text-right">
+                          <Badge 
+                            variant="secondary" 
+                            className={cn(
+                              "text-xs font-medium",
+                              cls.spots <= 3 
+                                ? "bg-rose-500/20 text-rose-400" 
+                                : "bg-brand-charcoal-700 text-white"
+                            )}
+                          >
+                            {cls.spots <= 3 ? `Only ${cls.spots} left!` : `${cls.spots} spots`}
+                          </Badge>
+                        </div>
+                      </motion.div>
+                    ))}
                   </div>
-                </div>
 
-                {/* Today's Classes Preview */}
-                <div className="space-y-3">
-                  <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wider">
-                    Today's Classes
-                  </h3>
-                  <ClassPreviewItem
-                    name="Pilates"
-                    time="9:30am"
-                    spots={5}
-                    color="bg-green-500"
-                  />
-                  <ClassPreviewItem
-                    name="Spin"
-                    time="10:30am"
-                    spots={8}
-                    color="bg-red-500"
-                  />
-                  <ClassPreviewItem
-                    name="Bodytone"
-                    time="6:00pm"
-                    spots={12}
-                    color="bg-blue-500"
-                  />
-                </div>
+                  {/* Progress Dots */}
+                  <div className="flex justify-center gap-2 mb-6">
+                    {todaysClasses.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setActiveClass(index)}
+                        className={cn(
+                          "h-1.5 rounded-full transition-all duration-300",
+                          activeClass === index 
+                            ? "w-6 bg-brand-lime-500" 
+                            : "w-1.5 bg-brand-charcoal-600 hover:bg-brand-charcoal-500"
+                        )}
+                      />
+                    ))}
+                  </div>
 
-                {/* Book Now Button */}
-                <Button
-                  className="w-full mt-6 bg-brand-lime-500 text-brand-charcoal-900 hover:bg-brand-lime-400"
-                  asChild
-                >
-                  <Link href="/booking">Book a Class</Link>
-                </Button>
+                  {/* Book Now Button */}
+                  <Button
+                    className="w-full bg-brand-lime-500 text-brand-charcoal-900 hover:bg-brand-lime-400 h-12 font-semibold shadow-lg shadow-brand-lime-500/20 transition-all duration-300 hover:shadow-brand-lime-500/40"
+                    asChild
+                  >
+                    <Link href="/booking">
+                      Book a Class
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                  </Button>
+                </div>
               </div>
             </div>
 
-            {/* Floating Elements */}
+            {/* Floating Cards */}
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.6 }}
-              className="absolute -left-8 top-1/4 rounded-xl bg-brand-charcoal-800 border border-brand-charcoal-700 p-4 shadow-xl"
+              initial={{ opacity: 0, x: -30, y: 20 }}
+              animate={{ opacity: 1, x: 0, y: 0 }}
+              transition={{ delay: 0.8, duration: 0.5 }}
+              whileHover={{ scale: 1.05, y: -5 }}
+              className="absolute -left-12 top-1/4 rounded-xl bg-brand-charcoal-800/90 backdrop-blur-xl border border-brand-charcoal-700/50 p-4 shadow-xl cursor-pointer"
             >
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-lime-500/20">
-                  <Users className="h-5 w-5 text-brand-lime-500" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-brand-lime-500/20 to-brand-lime-600/10">
+                  <Users className="h-6 w-6 text-brand-lime-500" />
                 </div>
                 <div>
-                  <p className="font-semibold text-sm">500+</p>
-                  <p className="text-xs text-muted-foreground">Active Members</p>
+                  <p className="font-bold text-lg text-white">500+</p>
+                  <p className="text-xs text-muted-foreground">Happy Members</p>
                 </div>
               </div>
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.8 }}
-              className="absolute -right-4 bottom-1/4 rounded-xl bg-brand-lime-500 p-4 shadow-xl"
+              initial={{ opacity: 0, x: 30, y: -20 }}
+              animate={{ opacity: 1, x: 0, y: 0 }}
+              transition={{ delay: 1, duration: 0.5 }}
+              whileHover={{ scale: 1.05, y: -5 }}
+              className="absolute -right-8 bottom-1/3 rounded-xl bg-gradient-to-br from-brand-lime-500 to-brand-lime-600 p-4 shadow-xl shadow-brand-lime-500/30 cursor-pointer"
             >
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-charcoal-900/20">
-                  <span className="text-xl">⭐</span>
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-charcoal-900/20">
+                  <Star className="h-5 w-5 text-brand-charcoal-900 fill-brand-charcoal-900" />
                 </div>
                 <div>
-                  <p className="font-semibold text-sm text-brand-charcoal-900">4.9 Rating</p>
-                  <p className="text-xs text-brand-charcoal-700">Google Reviews</p>
+                  <p className="font-bold text-brand-charcoal-900">4.8 Rating</p>
+                  <p className="text-xs text-brand-charcoal-700">120+ Reviews</p>
                 </div>
               </div>
+            </motion.div>
+
+            {/* Open Now Badge */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 1.2, duration: 0.4 }}
+              className="absolute top-4 right-4"
+            >
+              <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 px-3 py-1.5 backdrop-blur-sm">
+                <span className="mr-2 h-2 w-2 rounded-full bg-emerald-500 animate-pulse inline-block" />
+                Open Now
+              </Badge>
             </motion.div>
           </motion.div>
         </div>
@@ -241,50 +341,24 @@ export function HeroSection() {
 
       {/* Scroll Indicator */}
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden lg:block"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.5 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden lg:flex flex-col items-center gap-3"
       >
-        <div className="flex flex-col items-center gap-2 text-muted-foreground">
-          <span className="text-xs uppercase tracking-wider">Scroll to explore</span>
+        <span className="text-xs text-muted-foreground uppercase tracking-widest">Scroll</span>
+        <motion.div
+          animate={{ y: [0, 8, 0] }}
+          transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+          className="h-10 w-6 rounded-full border-2 border-brand-charcoal-600 p-1.5 flex justify-center"
+        >
           <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ repeat: Infinity, duration: 1.5 }}
-            className="h-8 w-5 rounded-full border-2 border-muted-foreground/30 p-1"
-          >
-            <div className="h-2 w-1 rounded-full bg-brand-lime-500 mx-auto" />
-          </motion.div>
-        </div>
+            animate={{ opacity: [1, 0.3, 1], y: [0, 8, 0] }}
+            transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+            className="h-2 w-1 rounded-full bg-brand-lime-500"
+          />
+        </motion.div>
       </motion.div>
     </section>
-  )
-}
-
-// Class Preview Item Component
-function ClassPreviewItem({
-  name,
-  time,
-  spots,
-  color,
-}: {
-  name: string
-  time: string
-  spots: number
-  color: string
-}) {
-  return (
-    <div className="flex items-center justify-between rounded-lg bg-brand-charcoal-800/50 p-3">
-      <div className="flex items-center gap-3">
-        <div className={cn('h-2 w-2 rounded-full', color)} />
-        <div>
-          <p className="font-medium text-sm">{name}</p>
-          <p className="text-xs text-muted-foreground">{time}</p>
-        </div>
-      </div>
-      <Badge variant="secondary" className="text-xs">
-        {spots} spots
-      </Badge>
-    </div>
   )
 }

@@ -209,7 +209,7 @@ export function TestimonialsSection() {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-brand-lime-500 transition-colors"
           >
-            <span>⭐ 4.9 rating on Google</span>
+            <span>⭐ 4.8 rating on Google</span>
             <span className="text-brand-lime-500">View all reviews →</span>
           </a>
         </div>
