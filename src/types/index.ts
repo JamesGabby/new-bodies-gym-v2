@@ -3,10 +3,27 @@ import { ClassType, ClassInstance, Instructor, Booking, Profile } from './databa
 
 // Extended types with relations
 export interface ClassInstanceWithDetails extends ClassInstance {
-  id: string
-  class_type: ClassType
-  instructor: Instructor | null
-  bookings?: Booking[]
+  id: string  // Add this if missing
+  class_date: string
+  start_time: string
+  end_time: string
+  location: string | null
+  max_capacity: number
+  current_capacity: number
+  is_cancelled: boolean
+  class_type: {
+    id: string
+    name: string
+    description: string | null
+    color: string | null
+    duration_minutes: number
+    difficulty_level: string | null
+    calories_burn_estimate: number | null
+  } | null
+  instructor: {
+    id: string
+    name: string
+  } | null
 }
 
 export interface BookingWithDetails extends Booking {
