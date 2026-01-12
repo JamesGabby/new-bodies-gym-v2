@@ -39,7 +39,7 @@ import {
   Bell
 } from 'lucide-react';
 import { format } from 'date-fns';
-import { Announcement } from '@/types/database';
+import { Announcement } from '@/types';
 import { toast } from 'sonner';
 import { AnnouncementDialog } from '@/components/admin/announcement-dialog';
 import { cn } from '@/lib/utils';

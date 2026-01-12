@@ -28,7 +28,7 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ColumnDef } from '@tanstack/react-table';
 import { MoreHorizontal, Plus, ArrowUpDown, Edit, Trash2, Calendar } from 'lucide-react';
-import { ClassSchedule, ClassType, Instructor } from '@/types/database';
+import { ClassSchedule, ClassType, Instructor } from '@/types';
 import { toast } from 'sonner';
 import { ScheduleDialog } from '@/components/admin/schedule-dialog';
 import { WeeklyScheduleView } from '@/components/admin/weekly-schedule-view';

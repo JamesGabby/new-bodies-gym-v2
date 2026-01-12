@@ -27,7 +27,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { ColumnDef } from '@tanstack/react-table';
 import { MoreHorizontal, Plus, ArrowUpDown, Edit, Trash2, Mail, Phone } from 'lucide-react';
-import { Instructor } from '@/types/database';
+import { Instructor } from '@/types';
 import { toast } from 'sonner';
 import { InstructorDialog } from '@/components/admin/instructor-dialog';
 

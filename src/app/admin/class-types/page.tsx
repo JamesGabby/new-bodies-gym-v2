@@ -26,7 +26,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { ColumnDef } from '@tanstack/react-table';
 import { MoreHorizontal, Plus, ArrowUpDown, Edit, Trash2, Copy } from 'lucide-react';
-import { ClassType } from '@/types/database';
+import { ClassType } from '@/types';
 import { toast } from 'sonner';
 import { ClassTypeDialog } from '@/components/admin/class-type-dialog';
 import { cn } from '@/lib/utils';

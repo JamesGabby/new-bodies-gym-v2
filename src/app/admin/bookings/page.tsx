@@ -54,7 +54,7 @@ import {
   Filter
 } from 'lucide-react';
 import { format, formatDistanceToNow } from 'date-fns';
-import { Booking, Profile, ClassInstance, ClassType } from '@/types/database';
+import { Booking, Profile, ClassInstance, ClassType } from '@/types';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { Textarea } from '@/components/ui/textarea';

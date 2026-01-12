@@ -28,7 +28,7 @@ import {
 import { ColumnDef } from '@tanstack/react-table';
 import { MoreHorizontal, Plus, ArrowUpDown, Mail, Phone, Edit, Trash2, UserCog } from 'lucide-react';
 import { format } from 'date-fns';
-import { Profile, Membership } from '@/types/database';
+import { Profile, Membership } from '@/types';
 import Link from 'next/link';
 import { toast } from 'sonner';
 import { MemberDialog } from '@/components/admin/member-dialog';
