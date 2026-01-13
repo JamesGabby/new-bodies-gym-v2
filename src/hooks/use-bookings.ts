@@ -181,9 +181,9 @@ export function useHasBooked(classInstanceId: string) {
         .eq('user_id', user.id)
         .eq('class_instance_id', classInstanceId)
         .eq('status', 'confirmed')
-        .single()
+        .maybeSingle()
 
-      if (error && error.code !== 'PGRST116') throw error
+      if (error) throw error
       return !!data
     },
     enabled: !!user && !!classInstanceId,
@@ -214,7 +214,7 @@ export function useCreateBooking() {
         .eq('user_id', user.id)
         .eq('class_instance_id', classInstanceId)
         .eq('status', 'confirmed')
-        .single()
+        .maybeSingle()
 
       if (existingBooking) {
         throw new Error(ERROR_MESSAGES.alreadyBooked)
@@ -248,6 +248,15 @@ export function useCreateBooking() {
         .single()
 
       if (error) throw error
+
+      // Update class capacity
+      await supabase
+        .from('class_instances')
+        .update({
+          current_capacity: classInstance.current_capacity + 1,
+        })
+        .eq('id', classInstanceId)
+
       return data
     },
     onSuccess: () => {
@@ -277,6 +286,20 @@ export function useCancelBooking() {
     }) => {
       const supabase = createClient()
 
+      // Get the booking first to update class capacity
+      const { data: booking, error: fetchError } = await supabase
+        .from('bookings')
+        .select('class_instance_id, status')
+        .eq('id', bookingId)
+        .single()
+
+      if (fetchError) throw fetchError
+
+      if (booking.status === 'cancelled') {
+        throw new Error('This booking is already cancelled')
+      }
+
+      // Update booking status
       const { data, error } = await supabase
         .from('bookings')
         .update({
@@ -289,6 +312,25 @@ export function useCancelBooking() {
         .single()
 
       if (error) throw error
+
+      // Decrement class capacity
+      if (booking.class_instance_id) {
+        const { data: classInstance } = await supabase
+          .from('class_instances')
+          .select('current_capacity')
+          .eq('id', booking.class_instance_id)
+          .single()
+
+        if (classInstance && classInstance.current_capacity > 0) {
+          await supabase
+            .from('class_instances')
+            .update({
+              current_capacity: classInstance.current_capacity - 1,
+            })
+            .eq('id', booking.class_instance_id)
+        }
+      }
+
       return data
     },
     onSuccess: () => {
@@ -315,6 +357,18 @@ export function useJoinWaitlist() {
 
       const supabase = createClient()
 
+      // Check if already on waitlist
+      const { data: existingEntry } = await supabase
+        .from('waitlist')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('class_instance_id', classInstanceId)
+        .maybeSingle()
+
+      if (existingEntry) {
+        throw new Error('You are already on the waitlist for this class')
+      }
+
       // Get current position
       const { data: lastPosition } = await supabase
         .from('waitlist')
@@ -322,7 +376,7 @@ export function useJoinWaitlist() {
         .eq('class_instance_id', classInstanceId)
         .order('position', { ascending: false })
         .limit(1)
-        .single()
+        .maybeSingle()
 
       const newPosition = (lastPosition?.position || 0) + 1
 
@@ -341,6 +395,35 @@ export function useJoinWaitlist() {
     },
     onSuccess: () => {
       toast.success('Added to waitlist')
+      queryClient.invalidateQueries({ queryKey: ['waitlist'] })
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || ERROR_MESSAGES.generic)
+    },
+  })
+}
+
+// Leave waitlist mutation
+export function useLeaveWaitlist() {
+  const queryClient = useQueryClient()
+  const { user } = useAuthStore()
+
+  return useMutation({
+    mutationFn: async (classInstanceId: string) => {
+      if (!user) throw new Error('You must be logged in')
+
+      const supabase = createClient()
+
+      const { error } = await supabase
+        .from('waitlist')
+        .delete()
+        .eq('user_id', user.id)
+        .eq('class_instance_id', classInstanceId)
+
+      if (error) throw error
+    },
+    onSuccess: () => {
+      toast.success('Removed from waitlist')
       queryClient.invalidateQueries({ queryKey: ['waitlist'] })
     },
     onError: (error: Error) => {
@@ -392,7 +475,7 @@ export function useInstructors() {
 // Wrapper for class instances with friendlier return values
 export function useClassInstancesData(startDate: string, endDate: string) {
   const query = useClassInstances(startDate, endDate)
-  
+
   return {
     classes: query.data ?? [],
     loading: query.isLoading,
@@ -401,16 +484,22 @@ export function useClassInstancesData(startDate: string, endDate: string) {
   }
 }
 
-// Combined bookings hook
+// Combined bookings hook - main hook for components
 export function useBookings() {
   const createBookingMutation = useCreateBooking()
-
-  const createBooking = async (classInstanceId: string, notes?: string) => {
-    return createBookingMutation.mutateAsync({ classInstanceId, notes })
-  }
+  const cancelBookingMutation = useCancelBooking()
 
   return {
-    createBooking,
+    // Create booking
+    createBooking: (classInstanceId: string, notes?: string) =>
+      createBookingMutation.mutateAsync({ classInstanceId, notes }),
     isCreating: createBookingMutation.isPending,
+    createError: createBookingMutation.error,
+
+    // Cancel booking
+    cancelBooking: (bookingId: string, reason?: string) =>
+      cancelBookingMutation.mutateAsync({ bookingId, reason }),
+    isCancelling: cancelBookingMutation.isPending,
+    cancelError: cancelBookingMutation.error,
   }
 }

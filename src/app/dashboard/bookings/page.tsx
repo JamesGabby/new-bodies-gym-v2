@@ -2,9 +2,9 @@
 'use client';
 
 import { useState } from 'react';
-import { useUserBookings } from '@/hooks/use-user-dashboard';
+import { useUserBookings, BookingWithDetails } from '@/hooks/use-user-dashboard';
 import { useBookings } from '@/hooks/use-bookings';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -28,17 +28,15 @@ import {
   AlertCircle
 } from 'lucide-react';
 import Link from 'next/link';
-import { format, isToday, isTomorrow, isPast, addHours, isBefore } from 'date-fns';
-import { BookingWithDetails } from '@/hooks/use-user-dashboard';
+import { format, isToday, isTomorrow, addHours, isBefore } from 'date-fns';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 
 export default function MyBookingsPage() {
   const { bookings: upcomingBookings, loading: upcomingLoading, refetch } = useUserBookings({ upcoming: true });
-  const { cancelBooking } = useBookings();
+  const { cancelBooking, isCancelling } = useBookings();
   const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
   const [bookingToCancel, setBookingToCancel] = useState<BookingWithDetails | null>(null);
-  const [cancelling, setCancelling] = useState(false);
 
   const confirmedBookings = upcomingBookings.filter(b => b.status === 'confirmed');
   const waitlistBookings = upcomingBookings.filter(b => b.status === 'waitlist');
@@ -51,17 +49,14 @@ export default function MyBookingsPage() {
   const handleConfirmCancel = async () => {
     if (!bookingToCancel) return;
     
-    setCancelling(true);
     try {
       await cancelBooking(bookingToCancel.id);
-      toast.success('Booking cancelled successfully');
       setCancelDialogOpen(false);
       setBookingToCancel(null);
       refetch();
-    } catch (error) {
-      toast.error('Failed to cancel booking');
-    } finally {
-      setCancelling(false);
+    } catch (error: any) {
+      // Error toast is handled by the mutation
+      console.error('Failed to cancel booking:', error);
     }
   };
 
@@ -181,15 +176,15 @@ export default function MyBookingsPage() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={cancelling}>
+            <AlertDialogCancel disabled={isCancelling}>
               Keep Booking
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleConfirmCancel}
-              disabled={cancelling}
+              disabled={isCancelling}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              {cancelling ? 'Cancelling...' : 'Cancel Booking'}
+              {isCancelling ? 'Cancelling...' : 'Cancel Booking'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -207,7 +202,9 @@ interface BookingCardProps {
 }
 
 function BookingCard({ booking, onCancel, canCancel, isWaitlist }: BookingCardProps) {
-  const classDate = booking.class_instance?.date ? new Date(booking.class_instance.date) : null;
+  const classDate = booking.class_instance?.date 
+    ? new Date(booking.class_instance.date) 
+    : null;
   
   const getDateLabel = () => {
     if (!classDate) return '';
@@ -253,13 +250,13 @@ function BookingCard({ booking, onCancel, canCancel, isWaitlist }: BookingCardPr
                   </h3>
                   {isWaitlist ? (
                     <Badge variant="outline">Waitlist</Badge>
-                  ) : isToday(classDate!) ? (
+                  ) : classDate && isToday(classDate) ? (
                     <Badge>Today</Badge>
                   ) : null}
                 </div>
                 <p className="text-sm text-muted-foreground">
                   {booking.class_instance?.class_type?.description?.slice(0, 100)}
-                  {(booking.class_instance?.class_type?.description?.length || 0) > 100 && '...'}
+                  {(booking.class_instance?.class_type?.description?.length ?? 0) > 100 && '...'}
                 </p>
               </div>
               
