@@ -127,7 +127,7 @@ export function useAuth() {
 
       return { success: true, data: authData }
     } catch (error: any) {
-      let message = ERROR_MESSAGES.generic
+      let message: string = ERROR_MESSAGES.generic
       
       if (error.message?.includes('Invalid login credentials')) {
         message = 'Invalid email or password. Please try again.'
