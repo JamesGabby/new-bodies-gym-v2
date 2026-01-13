@@ -34,14 +34,14 @@ import {
 } from 'lucide-react';
 import { format, addDays, startOfWeek, endOfWeek, isSameDay, isAfter, isBefore } from 'date-fns';
 import { cn } from '@/lib/utils';
-import { ClassInstance, ClassType } from '@/types';
+import { ClassInstance, ClassInstanceWithDetails, ClassType } from '@/types';
 import { toast } from 'sonner';
 
 type ClassInstanceWithType = ClassInstance & { class_type?: ClassType };
 
 export default function BookClassPage() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const [selectedClass, setSelectedClass] = useState<ClassInstanceWithType | null>(null);
+  const [selectedClass, setSelectedClass] = useState<ClassInstanceWithDetails | null>(null);
   const [isBookingDialogOpen, setIsBookingDialogOpen] = useState(false);
   const [isBooking, setIsBooking] = useState(false);
   const [classFilter, setClassFilter] = useState<string>('all');
@@ -77,7 +77,6 @@ export default function BookClassPage() {
         new Date()
       );
       return matchesDate && matchesType && isFuture && c.status === 'scheduled';
-    // src/app/dashboard/book/page.tsx (continued)
     }).sort((a, b) => a.start_time.localeCompare(b.start_time));
   }, [classes, selectedDate, classFilter]);
 
@@ -100,7 +99,7 @@ export default function BookClassPage() {
     setSelectedDate(addDays(selectedDate, 7));
   };
 
-  const handleClassSelect = (classInstance: ClassInstanceWithType) => {
+  const handleClassSelect = (classInstance: ClassInstanceWithDetails) => {
     setSelectedClass(classInstance);
     setIsBookingDialogOpen(true);
   };
@@ -126,7 +125,7 @@ export default function BookClassPage() {
     }
   };
 
-  const getAvailabilityStatus = (classInstance: ClassInstanceWithType) => {
+  const getAvailabilityStatus = (classInstance: ClassInstanceWithDetails) => {
     const spotsLeft = classInstance.max_capacity - (classInstance.current_capacity || 0);
     
     if (spotsLeft <= 0) {
@@ -349,7 +348,7 @@ export default function BookClassPage() {
 
 // Class Card Component
 interface ClassCardProps {
-  classInstance: ClassInstanceWithType;
+  classInstance: ClassInstanceWithDetails;  // Change this type
   onSelect: () => void;
   availability: {
     status: string;
@@ -408,7 +407,7 @@ function ClassCard({ classInstance, onSelect, availability }: ClassCardProps) {
                   key={level}
                   className={cn(
                     "w-2 h-2 rounded-full",
-                    level <= (classInstance.class_type?.difficulty_level || 1)
+                    level <= (classInstance.class_type?.difficulty_level ?? 1)
                       ? "bg-primary"
                       : "bg-muted"
                   )}
