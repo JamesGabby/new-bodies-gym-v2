@@ -1,4 +1,6 @@
 // src/app/(auth)/layout.tsx
+'use client'
+
 import Link from 'next/link'
 import { Logo } from '@/components/shared/logo'
 
