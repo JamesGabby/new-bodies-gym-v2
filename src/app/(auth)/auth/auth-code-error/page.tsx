@@ -1,7 +1,6 @@
 // src/app/(auth)/auth/auth-code-error/page.tsx
 'use client'
 
-import { Metadata } from 'next'
 import Link from 'next/link'
 import { AlertTriangle, ArrowLeft, RefreshCw } from 'lucide-react'
 
@@ -14,11 +13,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-
-export const metadata: Metadata = {
-  title: 'Authentication Error',
-  description: 'There was a problem with authentication',
-}
 
 export default function AuthCodeErrorPage() {
   return (
