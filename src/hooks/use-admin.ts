@@ -44,7 +44,6 @@ export function useDashboardStats() {
       const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString();
       const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
 
-      // Fetch all data in parallel
       const [
         membersResult,
         activeMembersResult,
@@ -70,9 +69,7 @@ export function useDashboardStats() {
           .select('id', { count: 'exact', head: true })
           .eq('role', 'member')
           .gte('created_at', startOfMonth),
-        supabase.from('memberships')
-          .select('membership_type')
-          .eq('status', 'active'),
+        supabase.from('memberships').select('membership_type').eq('status', 'active'),
         supabase.from('bookings')
           .select('class_instances!inner(class_types!inner(name))')
           .eq('status', 'confirmed')
@@ -87,8 +84,7 @@ export function useDashboardStats() {
           .order('booked_at', { ascending: true }),
       ]);
 
-      // Process membership distribution
-      const membershipDist = (membershipDistResult.data || []).reduce((acc: Record<string, number>, m) => {
+      const membershipDist = (membershipDistResult.data || []).reduce((acc: Record<string, number>, m: any) => {
         const type = m.membership_type as string;
         acc[type] = (acc[type] || 0) + 1;
         return acc;
@@ -99,7 +95,6 @@ export function useDashboardStats() {
         count: count as number,
       }));
 
-      // Process popular classes
       const classCount = (popularClassesResult.data || []).reduce((acc: Record<string, number>, b: any) => {
         const name = b.class_instances?.class_types?.name;
         if (name) {
@@ -113,15 +108,13 @@ export function useDashboardStats() {
         .sort((a, b) => b.bookings - a.bookings)
         .slice(0, 5);
 
-      // Calculate attendance rate
       const attendanceData = attendanceResult.data || [];
-      const attendedCount = attendanceData.filter((b) => b.attended === true).length;
+      const attendedCount = attendanceData.filter((b: any) => b.attended === true).length;
       const attendanceRate = attendanceData.length > 0 
         ? Math.round((attendedCount / attendanceData.length) * 100) 
         : 0;
 
-      // Process bookings trend
-      const trendData = (bookingsTrendResult.data || []).reduce((acc: Record<string, number>, b) => {
+      const trendData = (bookingsTrendResult.data || []).reduce((acc: Record<string, number>, b: any) => {
         if (b.booked_at) {
           const date = new Date(b.booked_at).toISOString().split('T')[0];
           acc[date] = (acc[date] || 0) + 1;
@@ -133,7 +126,6 @@ export function useDashboardStats() {
         .map(([date, count]) => ({ date, count: count as number }))
         .sort((a, b) => a.date.localeCompare(b.date));
 
-      // Calculate revenue
       const revenueResult = await supabase
         .from('memberships')
         .select('price')
@@ -199,14 +191,10 @@ export function useMembers() {
 
       if (error) throw error;
 
-      const membersWithMembership: MemberWithMembership[] = (data || []).map((member) => {
-        const { memberships, ...rest } = member;
-        return {
-          ...rest,
-          role: rest.role as Profile['role'],
-          membership: memberships?.[0] as Membership | undefined ?? null,
-        };
-      });
+      const membersWithMembership = (data || []).map((member: any) => ({
+        ...member,
+        membership: member.memberships?.[0] ?? null,
+      })) as MemberWithMembership[];
 
       setMembers(membersWithMembership);
     } catch (err) {
@@ -216,32 +204,20 @@ export function useMembers() {
     }
   }, [supabase]);
 
-  const updateMember = async (id: string, updates: Partial<Profile>) => {
-    const { error } = await supabase
-      .from('profiles')
-      .update(updates)
-      .eq('id', id);
-    
+  const updateMember = async (id: string, updates: Record<string, unknown>) => {
+    const { error } = await supabase.from('profiles').update(updates).eq('id', id);
     if (error) throw error;
     await fetchMembers();
   };
 
   const deleteMember = async (id: string) => {
-    const { error } = await supabase
-      .from('profiles')
-      .delete()
-      .eq('id', id);
-    
+    const { error } = await supabase.from('profiles').delete().eq('id', id);
     if (error) throw error;
     await fetchMembers();
   };
 
-  const updateMembership = async (userId: string, updates: Partial<Membership>) => {
-    const { error } = await supabase
-      .from('memberships')
-      .update(updates)
-      .eq('user_id', userId);
-    
+  const updateMembership = async (userId: string, updates: Record<string, unknown>) => {
+    const { error } = await supabase.from('memberships').update(updates).eq('user_id', userId);
     if (error) throw error;
     await fetchMembers();
   };
@@ -271,25 +247,17 @@ export function useSchedule() {
       setLoading(true);
       const { data, error } = await supabase
         .from('class_schedule')
-        .select(`
-          *,
-          class_types (*),
-          instructors (*)
-        `)
+        .select(`*, class_types (*), instructors (*)`)
         .order('day_of_week', { ascending: true })
         .order('start_time', { ascending: true });
 
       if (error) throw error;
       
-      const processedData: ScheduleWithRelations[] = (data || []).map((schedule) => {
-        const { class_types, instructors, ...rest } = schedule;
-        return {
-          ...rest,
-          day_of_week: rest.day_of_week as ClassSchedule['day_of_week'],
-          class_type: class_types as ClassType | null,
-          instructor: instructors as Instructor | null,
-        };
-      });
+      const processedData = (data || []).map((schedule: any) => ({
+        ...schedule,
+        class_type: schedule.class_types,
+        instructor: schedule.instructors,
+      })) as ScheduleWithRelations[];
       
       setSchedules(processedData);
     } catch (err) {
@@ -299,31 +267,20 @@ export function useSchedule() {
     }
   }, [supabase]);
 
-  const createSchedule = async (schedule: Omit<ClassSchedule, 'id' | 'created_at' | 'updated_at'>) => {
-    const { error } = await supabase
-      .from('class_schedule')
-      .insert(schedule);
-    
+  const createSchedule = async (schedule: Record<string, unknown>) => {
+    const { error } = await supabase.from('class_schedule').insert(schedule as any);
     if (error) throw error;
     await fetchSchedules();
   };
 
-  const updateSchedule = async (id: string, updates: Partial<ClassSchedule>) => {
-    const { error } = await supabase
-      .from('class_schedule')
-      .update(updates)
-      .eq('id', id);
-    
+  const updateSchedule = async (id: string, updates: Record<string, unknown>) => {
+    const { error } = await supabase.from('class_schedule').update(updates).eq('id', id);
     if (error) throw error;
     await fetchSchedules();
   };
 
   const deleteSchedule = async (id: string) => {
-    const { error } = await supabase
-      .from('class_schedule')
-      .delete()
-      .eq('id', id);
-    
+    const { error } = await supabase.from('class_schedule').delete().eq('id', id);
     if (error) throw error;
     await fetchSchedules();
   };
@@ -353,32 +310,20 @@ export function useAdminBookings() {
       setLoading(true);
       const { data, error } = await supabase
         .from('bookings')
-        .select(`
-          *,
-          profiles (*),
-          class_instances (
-            *,
-            class_types (*)
-          )
-        `)
+        .select(`*, profiles (*), class_instances (*, class_types (*))`)
         .order('booked_at', { ascending: false })
         .limit(100);
 
       if (error) throw error;
       
-      const processedData: BookingWithRelations[] = (data || []).map((booking) => {
-        const { profiles, class_instances, ...rest } = booking;
-        return {
-          ...rest,
-          status: rest.status as Booking['status'],
-          user: profiles as Profile | null,
-          class_instance: class_instances ? {
-            ...class_instances,
-            status: class_instances.status as ClassInstance['status'],
-            class_type: class_instances.class_types as ClassType | null,
-          } : null,
-        };
-      });
+      const processedData = (data || []).map((booking: any) => ({
+        ...booking,
+        user: booking.profiles,
+        class_instance: booking.class_instances ? {
+          ...booking.class_instances,
+          class_type: booking.class_instances.class_types,
+        } : null,
+      })) as BookingWithRelations[];
       
       setBookings(processedData);
     } catch (err) {
@@ -388,12 +333,8 @@ export function useAdminBookings() {
     }
   }, [supabase]);
 
-  const updateBooking = async (id: string, updates: Partial<Booking>) => {
-    const { error } = await supabase
-      .from('bookings')
-      .update(updates)
-      .eq('id', id);
-    
+  const updateBooking = async (id: string, updates: Record<string, unknown>) => {
+    const { error } = await supabase.from('bookings').update(updates).eq('id', id);
     if (error) throw error;
     await fetchBookings();
   };
@@ -407,7 +348,6 @@ export function useAdminBookings() {
         cancellation_reason: reason,
       })
       .eq('id', id);
-    
     if (error) throw error;
     await fetchBookings();
   };
@@ -420,7 +360,6 @@ export function useAdminBookings() {
         check_in_time: new Date().toISOString(),
       })
       .eq('id', id);
-    
     if (error) throw error;
     await fetchBookings();
   };
@@ -456,31 +395,20 @@ export function useClassTypes() {
     }
   }, [supabase]);
 
-  const createClassType = async (classType: Omit<ClassType, 'id' | 'created_at' | 'updated_at'>) => {
-    const { error } = await supabase
-      .from('class_types')
-      .insert(classType);
-    
+  const createClassType = async (classType: Record<string, unknown>) => {
+    const { error } = await supabase.from('class_types').insert(classType as any);
     if (error) throw error;
     await fetchClassTypes();
   };
 
-  const updateClassType = async (id: string, updates: Partial<ClassType>) => {
-    const { error } = await supabase
-      .from('class_types')
-      .update(updates)
-      .eq('id', id);
-    
+  const updateClassType = async (id: string, updates: Record<string, unknown>) => {
+    const { error } = await supabase.from('class_types').update(updates).eq('id', id);
     if (error) throw error;
     await fetchClassTypes();
   };
 
   const deleteClassType = async (id: string) => {
-    const { error } = await supabase
-      .from('class_types')
-      .delete()
-      .eq('id', id);
-    
+    const { error } = await supabase.from('class_types').delete().eq('id', id);
     if (error) throw error;
     await fetchClassTypes();
   };
@@ -516,31 +444,20 @@ export function useAnnouncements() {
     }
   }, [supabase]);
 
-  const createAnnouncement = async (announcement: Omit<Announcement, 'id' | 'created_at' | 'updated_at'>) => {
-    const { error } = await supabase
-      .from('announcements')
-      .insert(announcement);
-    
+  const createAnnouncement = async (announcement: Record<string, unknown>) => {
+    const { error } = await supabase.from('announcements').insert(announcement as any);
     if (error) throw error;
     await fetchAnnouncements();
   };
 
-  const updateAnnouncement = async (id: string, updates: Partial<Announcement>) => {
-    const { error } = await supabase
-      .from('announcements')
-      .update(updates)
-      .eq('id', id);
-    
+  const updateAnnouncement = async (id: string, updates: Record<string, unknown>) => {
+    const { error } = await supabase.from('announcements').update(updates).eq('id', id);
     if (error) throw error;
     await fetchAnnouncements();
   };
 
   const deleteAnnouncement = async (id: string) => {
-    const { error } = await supabase
-      .from('announcements')
-      .delete()
-      .eq('id', id);
-    
+    const { error } = await supabase.from('announcements').delete().eq('id', id);
     if (error) throw error;
     await fetchAnnouncements();
   };
@@ -576,31 +493,20 @@ export function useInstructors() {
     }
   }, [supabase]);
 
-  const createInstructor = async (instructor: Omit<Instructor, 'id' | 'created_at' | 'updated_at'>) => {
-    const { error } = await supabase
-      .from('instructors')
-      .insert(instructor);
-    
+  const createInstructor = async (instructor: Record<string, unknown>) => {
+    const { error } = await supabase.from('instructors').insert(instructor as any);
     if (error) throw error;
     await fetchInstructors();
   };
 
-  const updateInstructor = async (id: string, updates: Partial<Instructor>) => {
-    const { error } = await supabase
-      .from('instructors')
-      .update(updates)
-      .eq('id', id);
-    
+  const updateInstructor = async (id: string, updates: Record<string, unknown>) => {
+    const { error } = await supabase.from('instructors').update(updates).eq('id', id);
     if (error) throw error;
     await fetchInstructors();
   };
 
   const deleteInstructor = async (id: string) => {
-    const { error } = await supabase
-      .from('instructors')
-      .delete()
-      .eq('id', id);
-    
+    const { error } = await supabase.from('instructors').delete().eq('id', id);
     if (error) throw error;
     await fetchInstructors();
   };
@@ -637,11 +543,7 @@ export function useContactSubmissions() {
   }, [supabase]);
 
   const markAsRead = async (id: string) => {
-    const { error } = await supabase
-      .from('contact_submissions')
-      .update({ is_read: true })
-      .eq('id', id);
-    
+    const { error } = await supabase.from('contact_submissions').update({ is_read: true }).eq('id', id);
     if (error) throw error;
     await fetchSubmissions();
   };
@@ -649,22 +551,14 @@ export function useContactSubmissions() {
   const markAsResponded = async (id: string, respondedBy: string) => {
     const { error } = await supabase
       .from('contact_submissions')
-      .update({ 
-        responded_at: new Date().toISOString(),
-        responded_by: respondedBy,
-      })
+      .update({ responded_at: new Date().toISOString(), responded_by: respondedBy })
       .eq('id', id);
-    
     if (error) throw error;
     await fetchSubmissions();
   };
 
   const deleteSubmission = async (id: string) => {
-    const { error } = await supabase
-      .from('contact_submissions')
-      .delete()
-      .eq('id', id);
-    
+    const { error } = await supabase.from('contact_submissions').delete().eq('id', id);
     if (error) throw error;
     await fetchSubmissions();
   };

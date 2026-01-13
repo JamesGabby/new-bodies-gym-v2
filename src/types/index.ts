@@ -2,7 +2,7 @@
 import type { ReactNode } from 'react'
 
 // ============================================
-// Database Base Types (matching your schema)
+// Database Base Types (matching your schema with nulls)
 // ============================================
 
 export interface Profile {
@@ -13,15 +13,15 @@ export interface Profile {
   phone: string | null
   date_of_birth: string | null
   avatar_url: string | null
-  role: 'member' | 'staff' | 'admin'
+  role: 'member' | 'staff' | 'admin' | null
   emergency_contact_name: string | null
   emergency_contact_phone: string | null
   health_conditions: string | null
-  marketing_consent: boolean
-  terms_accepted: boolean
+  marketing_consent: boolean | null
+  terms_accepted: boolean | null
   terms_accepted_at: string | null
-  created_at: string
-  updated_at: string
+  created_at: string | null
+  updated_at: string | null
 }
 
 export interface ClassType {
@@ -33,12 +33,12 @@ export interface ClassType {
   max_capacity: number
   color: string | null
   icon: string | null
-  difficulty_level: number | null  // integer 1-5 in database
+  difficulty_level: number | null
   calories_burn_estimate: number | null
   equipment_needed: string[] | null
-  is_active: boolean
-  created_at: string
-  updated_at: string
+  is_active: boolean | null
+  created_at: string | null
+  updated_at: string | null
 }
 
 export interface Instructor {
@@ -51,9 +51,9 @@ export interface Instructor {
   avatar_url: string | null
   specializations: string[] | null
   certifications: string[] | null
-  is_active: boolean
-  created_at: string
-  updated_at: string
+  is_active: boolean | null
+  created_at: string | null
+  updated_at: string | null
 }
 
 export interface ClassSchedule {
@@ -65,10 +65,10 @@ export interface ClassSchedule {
   end_time: string
   location: string | null
   max_capacity: number | null
-  is_active: boolean
+  is_active: boolean | null
   notes: string | null
-  created_at: string
-  updated_at: string
+  created_at: string | null
+  updated_at: string | null
 }
 
 export interface ClassInstance {
@@ -76,61 +76,61 @@ export interface ClassInstance {
   schedule_id: string | null
   class_type_id: string
   instructor_id: string | null
-  date: string  // This is 'date' in the database, not 'class_date'
+  date: string
   start_time: string
   end_time: string
   location: string | null
   max_capacity: number
   current_capacity: number
-  status: 'scheduled' | 'cancelled' | 'completed'
+  status: 'scheduled' | 'cancelled' | 'completed' | null
   cancellation_reason: string | null
   notes: string | null
-  created_at: string
-  updated_at: string
+  created_at: string | null
+  updated_at: string | null
 }
 
 export interface Booking {
   id: string
   user_id: string
   class_instance_id: string
-  status: 'confirmed' | 'cancelled' | 'attended' | 'no_show'
-  booked_at: string
+  status: 'pending' | 'confirmed' | 'cancelled' | 'completed' | 'no_show' | null
+  booked_at: string | null
   cancelled_at: string | null
   cancellation_reason: string | null
   attended: boolean | null
   check_in_time: string | null
   notes: string | null
-  created_at: string
-  updated_at: string
+  created_at: string | null
+  updated_at: string | null
 }
 
 export interface Membership {
   id: string
   user_id: string
-  membership_type: 'monthly' | 'annual' | 'pay_as_you_go' | 'student' | 'senior'
-  status: 'active' | 'cancelled' | 'expired' | 'suspended'
+  membership_type: 'monthly' | 'annual' | 'pay_as_you_go' | 'student' | 'senior' | 'family'
+  status: 'active' | 'cancelled' | 'expired' | 'suspended' | 'inactive' | null
   start_date: string
   end_date: string | null
   price: number
-  auto_renew: boolean
+  auto_renew: boolean | null
   payment_method: string | null
   stripe_subscription_id: string | null
   notes: string | null
-  created_at: string
-  updated_at: string
+  created_at: string | null
+  updated_at: string | null
 }
 
 export interface Announcement {
   id: string
   title: string
   content: string
-  type: 'info' | 'warning' | 'success' | 'error'
-  is_active: boolean
-  start_date: string
+  type: 'info' | 'warning' | 'success' | 'error' | null
+  is_active: boolean | null
+  start_date: string | null
   end_date: string | null
   created_by: string | null
-  created_at: string
-  updated_at: string
+  created_at: string | null
+  updated_at: string | null
 }
 
 export interface Waitlist {
@@ -138,10 +138,10 @@ export interface Waitlist {
   user_id: string
   class_instance_id: string
   position: number
-  added_at: string
+  added_at: string | null
   notified_at: string | null
   expires_at: string | null
-  created_at: string
+  created_at: string | null
 }
 
 export interface ContactSubmission {
@@ -151,10 +151,10 @@ export interface ContactSubmission {
   phone: string | null
   subject: string | null
   message: string
-  is_read: boolean
+  is_read: boolean | null
   responded_at: string | null
   responded_by: string | null
-  created_at: string
+  created_at: string | null
 }
 
 export interface GymSetting {
@@ -163,8 +163,8 @@ export interface GymSetting {
   value: Record<string, unknown>
   description: string | null
   updated_by: string | null
-  created_at: string
-  updated_at: string
+  created_at: string | null
+  updated_at: string | null
 }
 
 export interface AuditLog {
@@ -177,7 +177,7 @@ export interface AuditLog {
   new_data: Record<string, unknown> | null
   ip_address: string | null
   user_agent: string | null
-  created_at: string
+  created_at: string | null
 }
 
 // ============================================
@@ -185,25 +185,17 @@ export interface AuditLog {
 // ============================================
 
 export interface ClassInstanceWithDetails extends ClassInstance {
-  class_type: Pick<ClassType, 
-    | 'id' 
-    | 'name' 
-    | 'description' 
-    | 'color' 
-    | 'duration_minutes' 
-    | 'difficulty_level' 
-    | 'calories_burn_estimate'
-  > | null
-  instructor: Pick<Instructor, 'id' | 'name'> | null
+  class_type: ClassType | null
+  instructor: Instructor | null
 }
 
 export interface BookingWithDetails extends Booking {
-  class_instance: ClassInstanceWithDetails
-  user: Profile
+  class_instance: ClassInstanceWithDetails | null
+  user?: Profile | null
 }
 
 export interface ClassScheduleWithDetails extends ClassSchedule {
-  class_type: ClassType
+  class_type: ClassType | null
   instructor: Instructor | null
 }
 
@@ -213,7 +205,7 @@ export interface TimetableDay {
 }
 
 export interface UserWithMembership extends Profile {
-  membership: Pick<Membership, 'id' | 'membership_type' | 'status' | 'end_date'> | null
+  membership: Membership | null
 }
 
 // ============================================
@@ -396,7 +388,7 @@ export interface AuthUser {
   id: string
   email: string
   profile: Profile | null
-  membership: Pick<Membership, 'id' | 'membership_type' | 'status' | 'end_date'> | null
+  membership: Membership | null
 }
 
 export interface AuthState {
@@ -473,22 +465,3 @@ export interface SearchResult {
   subtitle?: string
   href: string
 }
-
-// ============================================
-// Utility Types
-// ============================================
-
-// For Supabase query results that might return partial data
-export type PartialClassInstance = Partial<ClassInstance> & { id: string }
-export type PartialProfile = Partial<Profile> & { id: string }
-export type PartialBooking = Partial<Booking> & { id: string }
-
-// For creating new records (without id and timestamps)
-export type CreateClassType = Omit<ClassType, 'id' | 'created_at' | 'updated_at'>
-export type CreateInstructor = Omit<Instructor, 'id' | 'created_at' | 'updated_at'>
-export type CreateClassSchedule = Omit<ClassSchedule, 'id' | 'created_at' | 'updated_at'>
-export type CreateBooking = Omit<Booking, 'id' | 'created_at' | 'updated_at' | 'booked_at'>
-
-// For updating records (all fields optional except id)
-export type UpdateProfile = Partial<Omit<Profile, 'id' | 'created_at'>> & { id: string }
-export type UpdateClassType = Partial<Omit<ClassType, 'id' | 'created_at'>> & { id: string }
