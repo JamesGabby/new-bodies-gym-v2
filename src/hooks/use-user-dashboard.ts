@@ -36,7 +36,7 @@ export function useUserProfile() {
         .single();
 
       if (error) throw error;
-      setProfile(data);
+      setProfile(data as any);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch profile');
     } finally {
@@ -191,7 +191,7 @@ export function useUserBookings(options?: {
           });
       }
 
-      setBookings(filteredBookings);
+      setBookings(filteredBookings as any);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch bookings');
     } finally {
@@ -334,7 +334,7 @@ export function useActiveAnnouncements() {
         .limit(5);
 
       if (error) throw error;
-      setAnnouncements(data || []);
+      setAnnouncements(data as any || []);
     } catch (err) {
       console.error('Failed to fetch announcements:', err);
     } finally {
