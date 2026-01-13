@@ -15,10 +15,10 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 
-export const metadata: Metadata = {
-  title: 'Authentication Error',
-  description: 'There was a problem with authentication',
-}
+// export const metadata: Metadata = {
+//   title: 'Authentication Error',
+//   description: 'There was a problem with authentication',
+// }
 
 export default function AuthCodeErrorPage() {
   return (
