@@ -135,7 +135,7 @@ export default function BookingsPage() {
     }
   };
 
-  const columns: ColumnDef<BookingWithRelations>[] = [
+  const columns: ColumnDef<BookingWithRelations, any>[] = [
     {
       accessorKey: 'user',
       header: 'Member',
@@ -368,7 +368,7 @@ export default function BookingsPage() {
       </div>
 
       <DataTable
-        columns={columns}
+        columns={columns as any}
         data={filteredBookings}
         searchKey="user"
         searchPlaceholder="Search by member..."
