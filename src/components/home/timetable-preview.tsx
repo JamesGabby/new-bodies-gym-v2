@@ -9,9 +9,12 @@ import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import { DAYS_OF_WEEK_LABELS } from '@/lib/constants'
 
+// Define the day type
+type DayOfWeek = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday'
+
 // Get current day of week
-function getCurrentDay(): string {
-  const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
+function getCurrentDay(): DayOfWeek {
+  const days: DayOfWeek[] = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
   return days[new Date().getDay()]
 }
 
@@ -20,11 +23,15 @@ export async function TimetablePreview() {
   const currentDay = getCurrentDay()
 
   // Fetch today's and tomorrow's classes
-  const daysToShow = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
+  const daysToShow: DayOfWeek[] = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
   const currentDayIndex = daysToShow.indexOf(currentDay)
-  const displayDays = currentDay === 'sunday' 
+  const displayDays: DayOfWeek[] = currentDay === 'sunday' 
     ? daysToShow.slice(0, 3) 
     : daysToShow.slice(Math.max(0, currentDayIndex), Math.max(0, currentDayIndex) + 3)
+
+  const queryDays: DayOfWeek[] = displayDays.length > 0 
+    ? displayDays 
+    : ['monday', 'tuesday', 'wednesday']
 
   const { data: schedule } = await supabase
     .from('class_schedule')
@@ -43,18 +50,16 @@ export async function TimetablePreview() {
       )
     `)
     .eq('is_active', true)
-    .in('day_of_week', displayDays.length > 0 ? displayDays : ['monday', 'tuesday', 'wednesday'])
+    .in('day_of_week', queryDays)
     .order('start_time', { ascending: true })
 
   // Group by day
   const groupedSchedule = (schedule || []).reduce((acc, item) => {
-    const day = item.day_of_week
+    const day = item.day_of_week as DayOfWeek
     if (!acc[day]) acc[day] = []
     acc[day].push(item)
     return acc
-  }, {} as Record<string, typeof schedule>)
-
-  const displayDaysFinal = displayDays.length > 0 ? displayDays : ['monday', 'tuesday', 'wednesday']
+  }, {} as Record<DayOfWeek, typeof schedule>)
 
   return (
     <Section background="muted" className="py-20 lg:py-28">
@@ -66,7 +71,7 @@ export async function TimetablePreview() {
 
       {/* Timetable Grid */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-8">
-        {displayDaysFinal.map((day) => {
+        {queryDays.map((day) => {
           const classes = groupedSchedule[day] || []
           const isToday = day === currentDay
 
