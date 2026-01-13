@@ -30,7 +30,9 @@ export function MembershipChart({ data }: MembershipChartProps) {
                 paddingAngle={5}
                 dataKey="count"
                 nameKey="type"
-                label={({ type, percent }) => `${type} (${(percent * 100).toFixed(0)}%)`}
+                label={({ payload, percent }) => 
+                  `${payload.type} (${((percent ?? 0) * 100).toFixed(0)}%)`
+                }
                 labelLine={false}
               >
                 {data.map((entry, index) => (
