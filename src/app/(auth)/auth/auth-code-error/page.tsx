@@ -1,9 +1,11 @@
 // src/app/(auth)/auth/auth-code-error/page.tsx
+'use client'
 
+import { Metadata } from 'next'
 import Link from 'next/link'
 import { AlertTriangle, ArrowLeft, RefreshCw } from 'lucide-react'
-import { cn } from '@/lib/utils'
 
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -13,10 +15,10 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 
-// Button style classes extracted
-const buttonBase = "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background h-10 px-4 py-2"
-const buttonOutline = "border border-input hover:bg-accent hover:text-accent-foreground"
-const buttonGhost = "hover:bg-accent hover:text-accent-foreground"
+export const metadata: Metadata = {
+  title: 'Authentication Error',
+  description: 'There was a problem with authentication',
+}
 
 export default function AuthCodeErrorPage() {
   return (
@@ -53,30 +55,25 @@ export default function AuthCodeErrorPage() {
         </CardContent>
         <CardFooter className="flex flex-col space-y-2">
           <div className="flex gap-2 w-full">
-            <Link 
-              href="/login"
-              className={cn(buttonBase, buttonOutline, "flex-1")}
+            <Button variant="outline" className="flex-1" asChild>
+              <Link href="/login">
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Sign In
+              </Link>
+            </Button>
+            <Button
+              className="flex-1 bg-brand-lime-500 text-brand-charcoal-900 hover:bg-brand-lime-400"
+              asChild
             >
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Sign In
-            </Link>
-            <Link 
-              href="/signup"
-              className={cn(
-                buttonBase, 
-                "flex-1 bg-brand-lime-500 text-brand-charcoal-900 hover:bg-brand-lime-400"
-              )}
-            >
-              <RefreshCw className="mr-2 h-4 w-4" />
-              Sign Up
-            </Link>
+              <Link href="/signup">
+                <RefreshCw className="mr-2 h-4 w-4" />
+                Sign Up
+              </Link>
+            </Button>
           </div>
-          <Link 
-            href="/contact"
-            className={cn(buttonBase, buttonGhost, "w-full")}
-          >
-            Contact Support
-          </Link>
+          <Button variant="ghost" className="w-full" asChild>
+            <Link href="/contact">Contact Support</Link>
+          </Button>
         </CardFooter>
       </Card>
     </div>
