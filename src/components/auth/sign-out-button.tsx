@@ -1,11 +1,11 @@
 // src/components/auth/sign-out-button.tsx
 'use client'
 
-import { useState } from 'react'
+import { useState, ComponentProps } from 'react'
 import { LogOut, Loader2 } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
-import { Button, ButtonProps } from '@/components/ui/button'
+import { Button } from '@/components/ui/button'
 import { useAuth } from '@/hooks/use-auth'
 import {
   AlertDialog,
@@ -19,7 +19,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 
-interface SignOutButtonProps extends Omit<ButtonProps, 'onClick'> {
+interface SignOutButtonProps extends Omit<ComponentProps<typeof Button>, 'onClick'> {
   showIcon?: boolean
   showConfirmation?: boolean
 }
