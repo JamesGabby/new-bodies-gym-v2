@@ -29,7 +29,7 @@ export function useClassSchedule(dayOfWeek?: string) {
         .order('start_time', { ascending: true })
 
       if (dayOfWeek) {
-        query = query.eq('day_of_week', dayOfWeek)
+        query = query.eq('day_of_week', dayOfWeek as any)
       }
 
       const { data, error } = await query
@@ -117,7 +117,7 @@ export function useUserBookings(status?: string) {
         .order('booked_at', { ascending: false })
 
       if (status) {
-        query = query.eq('status', status)
+        query = query.eq('status', status as any)
       }
 
       const { data, error } = await query
@@ -231,7 +231,7 @@ export function useCreateBooking() {
         throw new Error('Class not found')
       }
 
-      if (classInstance.current_capacity >= classInstance.max_capacity) {
+      if ((classInstance.current_capacity ?? 0) >= classInstance.max_capacity) {
         throw new Error(ERROR_MESSAGES.bookingFull)
       }
 
@@ -253,7 +253,7 @@ export function useCreateBooking() {
       await supabase
         .from('class_instances')
         .update({
-          current_capacity: classInstance.current_capacity + 1,
+          current_capacity: (classInstance.current_capacity ?? 0) + 1,
         })
         .eq('id', classInstanceId)
 
@@ -321,11 +321,11 @@ export function useCancelBooking() {
           .eq('id', booking.class_instance_id)
           .single()
 
-        if (classInstance && classInstance.current_capacity > 0) {
+        if (classInstance && (classInstance.current_capacity ?? 0) > 0) {
           await supabase
             .from('class_instances')
             .update({
-              current_capacity: classInstance.current_capacity - 1,
+              current_capacity: (classInstance.current_capacity ?? 0) - 1,
             })
             .eq('id', booking.class_instance_id)
         }
