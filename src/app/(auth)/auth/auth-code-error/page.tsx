@@ -1,10 +1,8 @@
 // src/app/(auth)/auth/auth-code-error/page.tsx
-'use client'
-
 import Link from 'next/link'
 import { AlertTriangle, ArrowLeft, RefreshCw } from 'lucide-react'
 
-import { Button } from '@/components/ui/button'
+import { buttonVariants } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -13,6 +11,10 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { cn } from '@/lib/utils'
+
+// Solution 2: Force dynamic rendering
+export const dynamic = 'force-dynamic'
 
 export default function AuthCodeErrorPage() {
   return (
@@ -48,26 +50,32 @@ export default function AuthCodeErrorPage() {
           </div>
         </CardContent>
         <CardFooter className="flex flex-col space-y-2">
+          {/* Solution 3: Use Link directly with buttonVariants */}
           <div className="flex gap-2 w-full">
-            <Button variant="outline" className="flex-1" asChild>
-              <Link href="/login">
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Sign In
-              </Link>
-            </Button>
-            <Button
-              className="flex-1 bg-brand-lime-500 text-brand-charcoal-900 hover:bg-brand-lime-400"
-              asChild
+            <Link
+              href="/login"
+              className={cn(buttonVariants({ variant: 'outline' }), 'flex-1')}
             >
-              <Link href="/signup">
-                <RefreshCw className="mr-2 h-4 w-4" />
-                Sign Up
-              </Link>
-            </Button>
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Sign In
+            </Link>
+            <Link
+              href="/signup"
+              className={cn(
+                buttonVariants({ variant: 'default' }),
+                'flex-1 bg-brand-lime-500 text-brand-charcoal-900 hover:bg-brand-lime-400'
+              )}
+            >
+              <RefreshCw className="mr-2 h-4 w-4" />
+              Sign Up
+            </Link>
           </div>
-          <Button variant="ghost" className="w-full" asChild>
-            <Link href="/contact">Contact Support</Link>
-          </Button>
+          <Link
+            href="/contact"
+            className={cn(buttonVariants({ variant: 'ghost' }), 'w-full')}
+          >
+            Contact Support
+          </Link>
         </CardFooter>
       </Card>
     </div>
