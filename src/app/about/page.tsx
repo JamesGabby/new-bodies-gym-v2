@@ -1,6 +1,5 @@
 // src/app/about/page.tsx
 import { Metadata } from 'next';
-import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -16,6 +15,8 @@ import {
   Clock,
   ChevronRight
 } from 'lucide-react';
+
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'About Us | New Bodies Gym',
