@@ -30,7 +30,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { mainNavigation } from '@/config/navigation'
 import { siteConfig } from '@/config/site'
 import { getInitials } from '@/lib/utils'
-import { Profile } from '@/types/database.types'
+import { Profile } from '@/types'
 
 interface MobileNavProps {
   onClose: () => void
