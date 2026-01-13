@@ -13,7 +13,7 @@ import {
   Membership,
   Instructor,
   ContactSubmission
-} from '@/types/database';
+} from '@/types';
 
 // Dashboard Stats Hook
 export interface DashboardStats {

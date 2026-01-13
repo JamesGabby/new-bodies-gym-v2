@@ -11,7 +11,7 @@ import {
   ClassInstance, 
   ClassType,
   Announcement 
-} from '@/types/database';
+} from '@/types';
 
 // User Profile Hook
 export function useUserProfile() {
