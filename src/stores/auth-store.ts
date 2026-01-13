@@ -1,7 +1,7 @@
 // src/stores/auth-store.ts
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
-import { Profile, Membership } from '@/types/database.types'
+import { Profile, Membership } from '@/types'
 
 interface AuthUser {
   id: string

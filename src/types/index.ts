@@ -13,7 +13,7 @@ export interface Profile {
   phone: string | null
   date_of_birth: string | null
   avatar_url: string | null
-  role: 'member' | 'staff' | 'admin' | null
+  role: 'member' | 'staff' | 'admin' | 'super_admin' | null
   emergency_contact_name: string | null
   emergency_contact_phone: string | null
   health_conditions: string | null
