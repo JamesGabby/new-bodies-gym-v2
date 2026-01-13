@@ -220,7 +220,7 @@ export default function MembersPage() {
       </div>
 
       <DataTable
-        columns={columns}
+        columns={columns as any}
         data={members}
         searchKey="email"
         searchPlaceholder="Search by email..."
