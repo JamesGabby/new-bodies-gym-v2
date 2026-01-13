@@ -218,7 +218,7 @@ export function ScheduleDialog({
                           <div className="flex items-center gap-2">
                             <div 
                               className="w-3 h-3 rounded-full"
-                              style={{ backgroundColor: classType.color }}
+                              style={{ backgroundColor: classType.color ?? '#ADFF2F' }}
                             />
                             {classType.name}
                           </div>
