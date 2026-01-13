@@ -21,6 +21,8 @@ import {
   ChevronRight
 } from 'lucide-react';
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Facilities | New Bodies Gym',
   description: 'Explore our state-of-the-art gym facilities including mixed gyms, ladies only zone, cardio suites, Olympic gym, boxing studio, and more.',

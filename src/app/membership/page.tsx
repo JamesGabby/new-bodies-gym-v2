@@ -17,6 +17,8 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Membership Plans | New Bodies Gym',
   description: 'Choose the perfect membership plan for your fitness journey. All memberships include full access to facilities and group classes.',
