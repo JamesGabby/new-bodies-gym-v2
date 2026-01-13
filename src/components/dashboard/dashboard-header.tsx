@@ -16,7 +16,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
-import { Profile } from '@/types/database';
+import { Profile } from '@/types';
 import Link from 'next/link';
 
 interface DashboardHeaderProps {
