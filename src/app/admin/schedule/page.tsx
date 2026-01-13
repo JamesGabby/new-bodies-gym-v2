@@ -210,14 +210,14 @@ export default function SchedulePage() {
 
       {view === 'table' ? (
         <DataTable
-          columns={columns}
+          columns={columns as any}
           data={schedules}
           searchKey="class_type"
           searchPlaceholder="Search schedules..."
         />
       ) : (
         <WeeklyScheduleView 
-          schedules={schedules}
+          schedules={schedules as any}
           onEdit={(schedule) => {
             setSelectedSchedule(schedule);
             setIsDialogOpen(true);
