@@ -4,7 +4,7 @@
 import { useEffect, useState } from 'react'
 import { AlertCircle, Info, CheckCircle, XCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { createClient } from '@/lib/supabase/client'  // Use client version
+import { createClient } from '@/lib/supabase/client'
 
 const iconMap = {
   info: Info,
@@ -24,7 +24,7 @@ interface Announcement {
   id: string
   title: string
   content: string
-  type: string
+  type: string | null  // Allow null
 }
 
 export function AnnouncementBannerClient() {
@@ -36,7 +36,7 @@ export function AnnouncementBannerClient() {
       
       const { data } = await supabase
         .from('announcements')
-        .select('*')
+        .select('id, title, content, type')  // Select only needed fields
         .eq('is_active', true)
         .lte('start_date', new Date().toISOString())
         .or(`end_date.is.null,end_date.gte.${new Date().toISOString()}`)
@@ -52,8 +52,9 @@ export function AnnouncementBannerClient() {
 
   if (!announcement) return null
 
-  const Icon = iconMap[announcement.type as keyof typeof iconMap] || Info
-  const colors = colorMap[announcement.type as keyof typeof colorMap] || colorMap.info
+  const type = announcement.type ?? 'info'  // Default to 'info' if null
+  const Icon = iconMap[type as keyof typeof iconMap] || Info
+  const colors = colorMap[type as keyof typeof colorMap] || colorMap.info
 
   return (
     <div className={cn('border-b', colors)}>
