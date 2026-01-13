@@ -2,6 +2,8 @@
 import { Metadata } from 'next'
 import { SignupForm } from './signup-form'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Join Now',
   description: 'Create your New Bodies Gym account and start your fitness journey',

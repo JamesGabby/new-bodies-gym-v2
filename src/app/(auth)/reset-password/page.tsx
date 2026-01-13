@@ -4,6 +4,8 @@ import { Suspense } from 'react'
 import { ResetPasswordForm } from './reset-password-form'
 import { Loading } from '@/components/shared/loading'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Reset Password',
   description: 'Create a new password for your New Bodies Gym account',
