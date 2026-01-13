@@ -28,7 +28,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { createClient } from '@/lib/supabase/client';
-import { Instructor } from '@/types/database';
+import { Instructor } from '@/types';
 import { toast } from 'sonner';
 import { Loader2, X, Plus } from 'lucide-react';
 

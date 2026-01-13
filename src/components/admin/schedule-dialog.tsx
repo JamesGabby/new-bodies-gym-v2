@@ -33,7 +33,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { createClient } from '@/lib/supabase/client';
-import { ClassSchedule, ClassType, Instructor } from '@/types/database';
+import { ClassSchedule, ClassType, Instructor } from '@/types';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
 

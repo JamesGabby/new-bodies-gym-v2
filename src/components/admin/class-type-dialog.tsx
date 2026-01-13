@@ -35,7 +35,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Slider } from '@/components/ui/slider';
 import { createClient } from '@/lib/supabase/client';
-import { ClassType } from '@/types/database';
+import { ClassType } from '@/types';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
 

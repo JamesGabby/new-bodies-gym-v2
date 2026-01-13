@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { ClassSchedule, ClassType, Instructor } from '@/types/database';
+import { ClassSchedule, ClassType, Instructor } from '@/types';
 import { Edit, Clock, MapPin, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
 

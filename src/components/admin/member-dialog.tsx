@@ -32,7 +32,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { createClient } from '@/lib/supabase/client';
-import { Profile, Membership } from '@/types/database';
+import { Profile, Membership } from '@/types';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
 

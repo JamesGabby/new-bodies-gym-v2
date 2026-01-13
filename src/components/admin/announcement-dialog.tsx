@@ -36,7 +36,7 @@ import { Switch } from '@/components/ui/switch';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { createClient } from '@/lib/supabase/client';
-import { Announcement } from '@/types/database';
+import { Announcement } from '@/types';
 import { toast } from 'sonner';
 import { Loader2, CalendarIcon, Info, AlertTriangle, CheckCircle, Bell } from 'lucide-react';
 import { format } from 'date-fns';
