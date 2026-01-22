@@ -13,13 +13,11 @@ import {
   ChevronDown,
   Sun,
   Moon,
-  Menu,
 } from 'lucide-react'
 import { useTheme } from 'next-themes'
 
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import {
   DropdownMenu,
   DropdownMenuContent,

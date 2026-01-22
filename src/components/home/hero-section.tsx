@@ -42,11 +42,11 @@ const StatCard = memo(function StatCard({
       initial={shouldAnimate ? { opacity: 0, scale: 0.9 } : false}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: 0.7 + index * 0.1 }}
-      className="group relative p-4 rounded-xl bg-brand-charcoal-800/30 border border-brand-charcoal-700/50 hover:border-brand-lime-500/30 transition-colors duration-300 backdrop-blur-sm"
+      className="group relative p-4 rounded-xl bg-card/80 border border-border hover:border-brand-lime-500/30 transition-colors duration-300 backdrop-blur-sm"
     >
       <div className="absolute inset-0 bg-gradient-to-br from-brand-lime-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl pointer-events-none" />
       <Icon className="h-5 w-5 text-brand-lime-500 mb-2" />
-      <p className="text-2xl lg:text-3xl font-bold text-white">{stat.value}</p>
+      <p className="text-2xl lg:text-3xl font-bold text-foreground">{stat.value}</p>
       <p className="text-xs lg:text-sm text-muted-foreground">{stat.label}</p>
     </motion.div>
   )
@@ -65,9 +65,9 @@ const ClassCard = memo(function ClassCard({
     <div
       onClick={onClick}
       className={cn(
-        "relative flex items-center justify-between rounded-xl bg-brand-charcoal-800/50 p-4 border-2 transition-all duration-300 cursor-pointer hover:bg-brand-charcoal-800/80",
+        "relative flex items-center justify-between rounded-xl bg-muted/50 p-4 border-2 transition-all duration-300 cursor-pointer hover:bg-muted/80",
         isActive 
-          ? "border-brand-lime-500/30 bg-brand-charcoal-800/80 scale-[1.02]" 
+          ? "border-brand-lime-500/30 bg-muted/80 scale-[1.02]" 
           : "border-transparent"
       )}
     >
@@ -80,7 +80,7 @@ const ClassCard = memo(function ClassCard({
           <div className={cn('h-3 w-3 rounded-full', cls.color)} />
         </div>
         <div>
-          <p className="font-semibold text-white">{cls.name}</p>
+          <p className="font-semibold text-foreground">{cls.name}</p>
           <p className="text-sm text-muted-foreground">
             {cls.time} · {cls.instructor}
           </p>
@@ -92,8 +92,8 @@ const ClassCard = memo(function ClassCard({
         className={cn(
           "text-xs font-medium",
           cls.spots <= 3 
-            ? "bg-rose-500/20 text-rose-400" 
-            : "bg-brand-charcoal-700 text-white"
+            ? "bg-rose-500/20 text-rose-600 dark:text-rose-400" 
+            : "bg-secondary text-secondary-foreground"
         )}
       >
         {cls.spots <= 3 ? `Only ${cls.spots} left!` : `${cls.spots} spots`}
@@ -102,21 +102,23 @@ const ClassCard = memo(function ClassCard({
   )
 })
 
-// Static background component - no re-renders
+// Static background component - adapts to theme
 const HeroBackground = memo(function HeroBackground({ prefersReducedMotion }: { prefersReducedMotion: boolean }) {
   return (
-    <div className="absolute inset-0 -z-10 bg-brand-charcoal-900">
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f12_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f12_1px,transparent_1px)] bg-[size:24px_24px]" />
+    <div className="absolute inset-0 -z-10 bg-gradient-to-b from-background via-background to-muted/30">
+      {/* Grid pattern - adapts to theme */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border)/0.5)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border)/0.5)_1px,transparent_1px)] bg-[size:24px_24px]" />
       
+      {/* Glow effects */}
       {!prefersReducedMotion ? (
         <>
-          <div className="absolute left-1/4 top-1/4 h-[600px] w-[600px] rounded-full bg-brand-lime-500/20 blur-[150px] animate-pulse-slow" />
-          <div className="absolute right-1/4 bottom-1/4 h-[400px] w-[400px] rounded-full bg-brand-lime-400/10 blur-[120px] animate-pulse-slower" />
+          <div className="absolute left-1/4 top-1/4 h-[600px] w-[600px] rounded-full bg-brand-lime-500/10 dark:bg-brand-lime-500/20 blur-[150px] animate-pulse-slow" />
+          <div className="absolute right-1/4 bottom-1/4 h-[400px] w-[400px] rounded-full bg-brand-lime-400/5 dark:bg-brand-lime-400/10 blur-[120px] animate-pulse-slower" />
         </>
       ) : (
         <>
-          <div className="absolute left-1/4 top-1/4 h-[600px] w-[600px] rounded-full bg-brand-lime-500/15 blur-[150px]" />
-          <div className="absolute right-1/4 bottom-1/4 h-[400px] w-[400px] rounded-full bg-brand-lime-400/10 blur-[120px]" />
+          <div className="absolute left-1/4 top-1/4 h-[600px] w-[600px] rounded-full bg-brand-lime-500/10 dark:bg-brand-lime-500/15 blur-[150px]" />
+          <div className="absolute right-1/4 bottom-1/4 h-[400px] w-[400px] rounded-full bg-brand-lime-400/5 dark:bg-brand-lime-400/10 blur-[120px]" />
         </>
       )}
     </div>
@@ -163,27 +165,27 @@ export function HeroSection() {
             className="text-center lg:text-left"
           >
             {/* Badge */}
-            <Badge className="mb-6 bg-brand-lime-500/10 text-brand-lime-500 border-brand-lime-500/20 px-4 py-2 text-sm font-medium backdrop-blur-sm">
+            <Badge className="mb-6 bg-brand-lime-500/10 text-brand-lime-600 dark:text-brand-lime-500 border-brand-lime-500/20 px-4 py-2 text-sm font-medium backdrop-blur-sm">
               <Sparkles className="mr-2 h-4 w-4" />
               {siteConfig.motto}
             </Badge>
 
             {/* Heading */}
             <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight mb-6 leading-[1.1]">
-              <span className="text-white">Your Journey to a</span>
+              <span className="text-foreground">Your Journey to a</span>
               <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-lime-400 via-brand-lime-500 to-brand-lime-400">
                 Stronger You
               </span>
               <br />
-              <span className="text-white">Starts Here</span>
+              <span className="text-foreground">Starts Here</span>
             </h1>
 
             {/* Description */}
             <p className="text-lg lg:text-xl text-muted-foreground mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed">
               Join Buxton's most welcoming gym with state-of-the-art facilities,
               expert trainers, and group classes for{' '}
-              <span className="text-brand-lime-500 font-medium">all fitness levels</span>.
+              <span className="text-brand-lime-600 dark:text-brand-lime-500 font-medium">all fitness levels</span>.
             </p>
 
             {/* CTA Buttons */}
@@ -201,7 +203,7 @@ export function HeroSection() {
               <Button
                 size="lg"
                 variant="outline"
-                className="group border-brand-charcoal-600 bg-brand-charcoal-800/50 text-white hover:bg-brand-charcoal-800 hover:border-brand-lime-500/50 h-14 px-8 backdrop-blur-sm transition-all duration-300"
+                className="group border-border bg-card/50 text-foreground hover:bg-card hover:border-brand-lime-500/50 h-14 px-8 backdrop-blur-sm transition-all duration-300"
                 asChild
               >
                 <Link href="/timetable">
@@ -228,19 +230,19 @@ export function HeroSection() {
           {/* Hero Visual - Interactive Class Card */}
           <div className="relative hidden lg:block">
             {/* Glow Effect */}
-            <div className="absolute -inset-1 bg-gradient-to-r from-brand-lime-500/20 via-brand-lime-400/10 to-brand-lime-500/20 rounded-3xl blur-xl opacity-50" />
+            <div className="absolute -inset-1 bg-gradient-to-r from-brand-lime-500/10 via-brand-lime-400/5 to-brand-lime-500/10 dark:from-brand-lime-500/20 dark:via-brand-lime-400/10 dark:to-brand-lime-500/20 rounded-3xl blur-xl opacity-50" />
             
-            <div className="relative rounded-2xl bg-gradient-to-br from-brand-charcoal-800 to-brand-charcoal-900 p-1 shadow-2xl">
-              <div className="rounded-xl bg-brand-charcoal-900/90 backdrop-blur-xl p-6">
+            <div className="relative rounded-2xl bg-gradient-to-br from-card to-muted/50 p-1 shadow-2xl border border-border">
+              <div className="rounded-xl bg-card/95 backdrop-blur-xl p-6">
                 {/* Card Header */}
                 <div className="flex items-center justify-between mb-6">
                   <div>
-                    <h3 className="font-semibold text-white text-lg">Today's Classes</h3>
+                    <h3 className="font-semibold text-foreground text-lg">Today's Classes</h3>
                     <p className="text-sm text-muted-foreground">Book your spot now</p>
                   </div>
                   <div className="flex items-center gap-1">
                     <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                    <span className="text-xs text-emerald-500 font-medium">Live</span>
+                    <span className="text-xs text-emerald-600 dark:text-emerald-500 font-medium">Live</span>
                   </div>
                 </div>
 
@@ -267,7 +269,7 @@ export function HeroSection() {
                         "h-1.5 rounded-full transition-all duration-300",
                         activeClass === index 
                           ? "w-6 bg-brand-lime-500" 
-                          : "w-1.5 bg-brand-charcoal-600 hover:bg-brand-charcoal-500"
+                          : "w-1.5 bg-muted-foreground/30 hover:bg-muted-foreground/50"
                       )}
                     />
                   ))}
@@ -286,14 +288,14 @@ export function HeroSection() {
               </div>
             </div>
 
-            {/* Floating Cards - Use CSS animations instead of Framer Motion */}
-            <div className="absolute -left-12 top-1/4 rounded-xl bg-brand-charcoal-800/90 backdrop-blur-xl border border-brand-charcoal-700/50 p-4 shadow-xl hover:scale-105 hover:-translate-y-1 transition-transform duration-300">
+            {/* Floating Cards */}
+            <div className="absolute -left-12 top-1/4 rounded-xl bg-card/95 backdrop-blur-xl border border-border p-4 shadow-xl hover:scale-105 hover:-translate-y-1 transition-transform duration-300">
               <div className="flex items-center gap-3">
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-brand-lime-500/20 to-brand-lime-600/10">
                   <Users className="h-6 w-6 text-brand-lime-500" />
                 </div>
                 <div>
-                  <p className="font-bold text-lg text-white">500+</p>
+                  <p className="font-bold text-lg text-foreground">500+</p>
                   <p className="text-xs text-muted-foreground">Happy Members</p>
                 </div>
               </div>
@@ -312,7 +314,7 @@ export function HeroSection() {
             </div>
 
             {/* Open Now Badge */}
-            <Badge className="absolute top-4 right-4 bg-emerald-500/20 text-emerald-400 border-emerald-500/30 px-3 py-1.5 backdrop-blur-sm">
+            <Badge className="absolute top-4 right-4 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 px-3 py-1.5 backdrop-blur-sm">
               <span className="mr-2 h-2 w-2 rounded-full bg-emerald-500 animate-pulse inline-block" />
               Open Now
             </Badge>
@@ -320,10 +322,10 @@ export function HeroSection() {
         </div>
       </div>
 
-      {/* Scroll Indicator - CSS only */}
+      {/* Scroll Indicator */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden lg:flex flex-col items-center gap-3">
         <span className="text-xs text-muted-foreground uppercase tracking-widest">Scroll</span>
-        <div className="h-10 w-6 rounded-full border-2 border-brand-charcoal-600 p-1.5 flex justify-center">
+        <div className="h-10 w-6 rounded-full border-2 border-border p-1.5 flex justify-center">
           <div className="h-2 w-1 rounded-full bg-brand-lime-500 animate-bounce" />
         </div>
       </div>

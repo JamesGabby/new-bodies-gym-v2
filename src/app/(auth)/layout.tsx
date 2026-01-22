@@ -1,8 +1,7 @@
 // src/app/(auth)/layout.tsx
 'use client'
 
-import Link from 'next/link'
-import { Logo, LogoWithImage } from '@/components/shared/logo'
+import { LogoWithImage } from '@/components/shared/logo'
 
 export default function AuthLayout({
   children,

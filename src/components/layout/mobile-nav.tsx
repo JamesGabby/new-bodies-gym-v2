@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useTheme } from 'next-themes'
 import {
-  X,
   User,
   LogOut,
   Settings,
@@ -16,12 +15,12 @@ import {
   Phone,
   Mail,
   MapPin,
-  Clock,
   ChevronRight,
+  X,
 } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
-import { Logo } from '@/components/shared/logo'
+import { LogoWithImage } from '@/components/shared/logo'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Separator } from '@/components/ui/separator'
@@ -68,11 +67,33 @@ export function MobileNav({
     <div className="flex h-full flex-col">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-border px-4 py-4">
-        <Logo size="sm" linkToHome={false} />
-        <Button variant="ghost" size="icon" onClick={onClose}>
-          <X className="h-5 w-5" />
-          <span className="sr-only">Close menu</span>
-        </Button>
+        <LogoWithImage size="sm" linkToHome={false} />
+
+        {/* Animated Close Button */}
+        <button
+          onClick={onClose}
+          className={cn(
+            'group relative flex h-11 w-11 items-center justify-center rounded-xl',
+            'bg-gradient-to-br from-muted/80 to-muted/40',
+            'border border-border',
+            'shadow-sm hover:shadow-md',
+            'transition-all duration-300 ease-out',
+            'hover:scale-105 hover:border-brand-lime-500/30',
+            'active:scale-95',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-lime-500 focus-visible:ring-offset-2'
+          )}
+          aria-label="Close menu"
+        >
+          {/* Background glow on hover */}
+          <span className="absolute inset-0 rounded-xl bg-brand-lime-500/0 group-hover:bg-brand-lime-500/10 transition-colors duration-300" />
+
+          {/* Icon with rotation on hover */}
+          <X className={cn(
+            'h-5 w-5 text-muted-foreground',
+            'transition-all duration-300',
+            'group-hover:text-foreground group-hover:rotate-90'
+          )} />
+        </button>
       </div>
 
       <ScrollArea className="flex-1">
@@ -86,7 +107,7 @@ export function MobileNav({
                   <AvatarFallback className="bg-brand-lime-500 text-brand-charcoal-900 font-semibold">
                     {getInitials(
                       `${profile.first_name || ''} ${profile.last_name || ''}`.trim() ||
-                        profile.email
+                      profile.email
                     )}
                   </AvatarFallback>
                 </Avatar>
