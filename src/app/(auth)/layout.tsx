@@ -2,7 +2,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Logo } from '@/components/shared/logo'
+import { Logo, LogoWithImage } from '@/components/shared/logo'
 
 export default function AuthLayout({
   children,
@@ -18,19 +18,7 @@ export default function AuthLayout({
       </div>
 
       {/* Header */}
-      <header className="container mx-auto px-4 py-6">
-        <div className="flex items-center justify-between">
-          <Logo size="md" />
-          <nav className="flex items-center gap-4">
-            <Link
-              href="/"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Back to Home
-            </Link>
-          </nav>
-        </div>
-      </header>
+      <LogoWithImage />
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">{children}</main>

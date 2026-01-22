@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { Logo } from '../shared/logo';
+import { Logo, LogoWithImage } from '../shared/logo';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -45,7 +45,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
     <div className="flex h-full flex-col">
       <div className="flex h-16 items-center border-b border-border px-6">
         <Link href="/admin" className="flex items-center gap-2" onClick={onNavigate}>
-          <Logo className="h-8 w-auto" linkToHome={false} />
+          <LogoWithImage linkToHome={false} />
           <span className="font-bold text-lg">Admin</span>
         </Link>
       </div>
