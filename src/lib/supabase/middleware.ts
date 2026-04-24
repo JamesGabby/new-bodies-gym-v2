@@ -65,24 +65,14 @@ export async function updateSession(request: NextRequest) {
 
   // Check admin access
   if (isAdminRoute && user) {
-    console.log('=== MIDDLEWARE ADMIN CHECK ===')
-    console.log('User ID:', user.id)
-    console.log('User Email:', user.email)
-    
-    const { data: profile, error } = await supabase
+    const { data: profile } = await supabase
       .from('profiles')
       .select('role')
       .eq('id', user.id)
       .single()
 
-    console.log('Profile:', profile)
-    console.log('Profile Error:', error)
-    console.log('Role:', profile?.role)
-    
     const allowedRoles = ['admin', 'super_admin', 'staff']
     const hasAccess = profile && allowedRoles.includes(profile.role)
-    console.log('Has Access:', hasAccess)
-    console.log('=== END MIDDLEWARE DEBUG ===')
 
     if (!hasAccess) {
       const url = request.nextUrl.clone()

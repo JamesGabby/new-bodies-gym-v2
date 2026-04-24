@@ -153,12 +153,24 @@ export function useUpcomingBookings() {
         `)
         .eq('user_id', user.id)
         .eq('status', 'confirmed')
-        .gte('class_instance.date', today)
-        .order('class_instance(date)', { ascending: true })
-        .order('class_instance(start_time)', { ascending: true })
+        .order('booked_at', { ascending: true })
 
       if (error) throw error
-      return data as BookingWithDetails[]
+
+      // Filter and sort upcoming bookings client-side — PostgREST doesn't
+      // support filtering/ordering on embedded resource columns via the JS client.
+      const upcoming = (data as BookingWithDetails[])
+        .filter((b) => b.class_instance && b.class_instance.date >= today)
+        .sort((a, b) => {
+          const dateA = a.class_instance?.date ?? ''
+          const dateB = b.class_instance?.date ?? ''
+          if (dateA !== dateB) return dateA < dateB ? -1 : 1
+          const timeA = a.class_instance?.start_time ?? ''
+          const timeB = b.class_instance?.start_time ?? ''
+          return timeA < timeB ? -1 : 1
+        })
+
+      return upcoming
     },
     enabled: !!user,
   })
@@ -235,6 +247,22 @@ export function useCreateBooking() {
         throw new Error(ERROR_MESSAGES.bookingFull)
       }
 
+      // Atomically increment capacity — only succeeds if capacity hasn't changed
+      // since we read it (optimistic locking against concurrent bookings).
+      const currentCapacity = classInstance.current_capacity ?? 0
+      const { count, error: capacityError } = await supabase
+        .from('class_instances')
+        .update({ current_capacity: currentCapacity + 1 })
+        .eq('id', classInstanceId)
+        .eq('current_capacity', currentCapacity)
+        .lt('current_capacity', classInstance.max_capacity)
+        .select('id', { count: 'exact', head: true })
+
+      if (capacityError) throw capacityError
+      if (!count || count === 0) {
+        throw new Error(ERROR_MESSAGES.bookingFull)
+      }
+
       // Create booking
       const { data, error } = await supabase
         .from('bookings')
@@ -247,15 +275,14 @@ export function useCreateBooking() {
         .select()
         .single()
 
-      if (error) throw error
-
-      // Update class capacity
-      await supabase
-        .from('class_instances')
-        .update({
-          current_capacity: (classInstance.current_capacity ?? 0) + 1,
-        })
-        .eq('id', classInstanceId)
+      if (error) {
+        // Roll back the capacity increment if the booking insert failed
+        await supabase
+          .from('class_instances')
+          .update({ current_capacity: currentCapacity })
+          .eq('id', classInstanceId)
+        throw error
+      }
 
       return data
     },
@@ -313,7 +340,8 @@ export function useCancelBooking() {
 
       if (error) throw error
 
-      // Decrement class capacity
+      // Atomically decrement capacity — reads current value then applies a
+      // compare-and-swap update so concurrent cancellations can't go negative.
       if (booking.class_instance_id) {
         const { data: classInstance } = await supabase
           .from('class_instances')
@@ -322,12 +350,13 @@ export function useCancelBooking() {
           .single()
 
         if (classInstance && (classInstance.current_capacity ?? 0) > 0) {
+          const currentCapacity = classInstance.current_capacity ?? 0
           await supabase
             .from('class_instances')
-            .update({
-              current_capacity: (classInstance.current_capacity ?? 0) - 1,
-            })
+            .update({ current_capacity: currentCapacity - 1 })
             .eq('id', booking.class_instance_id)
+            .eq('current_capacity', currentCapacity)
+            .gt('current_capacity', 0)
         }
       }
 

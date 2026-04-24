@@ -271,8 +271,8 @@ export function useAuth() {
 
   // Computed properties
   const isAuthenticated = !!user
-  const isAdmin = profile?.role === 'admin'
-  const isStaff = profile?.role === 'staff' || profile?.role === 'admin'
+  const isAdmin = profile?.role === 'admin' || profile?.role === 'super_admin'
+  const isStaff = profile?.role === 'staff' || profile?.role === 'admin' || profile?.role === 'super_admin'
 
   return {
     // State

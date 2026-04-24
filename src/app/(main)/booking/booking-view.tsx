@@ -41,9 +41,9 @@ export function BookingView() {
     setMounted(true)
   }, [])
 
-  // Calculate date range (2 weeks)
-  const startDate = format(selectedDate, 'yyyy-MM-dd')
-  const endDate = format(addDays(selectedDate, 0), 'yyyy-MM-dd')
+  // Fetch 14 days from today so date switching doesn't need a new network request
+  const startDate = format(new Date(), 'yyyy-MM-dd')
+  const endDate = format(addDays(new Date(), 13), 'yyyy-MM-dd')
 
   const { data: classInstances, isLoading } = useClassInstances(startDate, endDate)
 
@@ -55,12 +55,13 @@ export function BookingView() {
     if (!classInstances) return []
 
     return classInstances.filter((instance) => {
+      if (!isSameDay(new Date(instance.date), selectedDate)) return false
       if (selectedClassType !== 'all' && instance.class_type_id !== selectedClassType) {
         return false
       }
       return true
     })
-  }, [classInstances, selectedClassType])
+  }, [classInstances, selectedClassType, selectedDate])
 
   // Generate next 14 days for quick selection
   const nextDays = useMemo(() => {

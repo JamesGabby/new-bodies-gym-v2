@@ -1,7 +1,8 @@
 // src/app/not-found.tsx
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Home, ArrowLeft, Search } from 'lucide-react';
+import { Home, ArrowLeft } from 'lucide-react';
+import { GoBackButton } from '@/components/ui/go-back-button';
 
 export const dynamic = 'force-dynamic'
 
@@ -24,14 +25,7 @@ export default function NotFound() {
               Go Home
             </Button>
           </Link>
-          <Button 
-            variant="outline" 
-            onClick={() => window.history.back()}
-            className="w-full sm:w-auto"
-          >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Go Back
-          </Button>
+          <GoBackButton />
         </div>
         <div className="mt-8 pt-8 border-t">
           <p className="text-sm text-muted-foreground mb-4">

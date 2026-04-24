@@ -8,7 +8,8 @@ import { ScrollToTop } from '@/components/ui/scroll-to-top';
 import { CookieConsent } from '@/components/cookie-consent';
 import { Analytics } from '@/components/analytics';
 import { LocalBusinessSchema } from '@/components/structured-data';
-import { QueryProvider } from '@/components/providers/query-provider';
+import { QueryProvider } from '@/components/providers/query-provider'
+import { AuthProvider } from '@/components/providers/auth-provider';
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -114,6 +115,7 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <QueryProvider>
+        <AuthProvider>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
@@ -127,6 +129,7 @@ export default function RootLayout({
           <CookieConsent />
           <Toaster position="top-right" richColors />
         </ThemeProvider>
+        </AuthProvider>
         </QueryProvider>
         <Analytics />
       </body>
